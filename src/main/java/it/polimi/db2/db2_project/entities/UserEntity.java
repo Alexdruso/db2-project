@@ -4,8 +4,12 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "user", schema = "db2", catalog = "")
+@Table(name = "user", schema = "db2")
 public class UserEntity {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     private Long id;
     private String username;
     private String password;
@@ -14,15 +18,12 @@ public class UserEntity {
     private byte ban;
     private Byte admin;
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
     public Long getId() {
         return id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id = (long) id;
     }
 
     public void setId(Long id) {
@@ -102,9 +103,7 @@ public class UserEntity {
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (lastLogin != null ? !lastLogin.equals(that.lastLogin) : that.lastLogin != null) return false;
-        if (admin != null ? !admin.equals(that.admin) : that.admin != null) return false;
-
-        return true;
+        return admin != null ? admin.equals(that.admin) : that.admin == null;
     }
 
     @Override
