@@ -2,19 +2,21 @@ package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user", schema = "db2")
 public class UserEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     private String username;
     private String password;
     private String email;
-    private Timestamp lastLogin;
+    private Date lastLogin;
     private byte ban;
     private Byte admin;
 
@@ -31,7 +33,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "username")
+    @Column(name = "username", nullable = false)
     public String getUsername() {
         return username;
     }
@@ -41,7 +43,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     public String getPassword() {
         return password;
     }
@@ -51,7 +53,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     public String getEmail() {
         return email;
     }
@@ -60,9 +62,9 @@ public class UserEntity {
         this.email = email;
     }
 
-    @Basic
+    @Temporal(TemporalType.DATE)
     @Column(name = "last_login")
-    public Timestamp getLastLogin() {
+    public Date getLastLogin() {
         return lastLogin;
     }
 
@@ -98,12 +100,12 @@ public class UserEntity {
         UserEntity that = (UserEntity) o;
 
         if (ban != that.ban) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (username != null ? !username.equals(that.username) : that.username != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (email != null ? !email.equals(that.email) : that.email != null) return false;
-        if (lastLogin != null ? !lastLogin.equals(that.lastLogin) : that.lastLogin != null) return false;
-        return admin != null ? admin.equals(that.admin) : that.admin == null;
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(username, that.username)) return false;
+        if (!Objects.equals(password, that.password)) return false;
+        if (!Objects.equals(email, that.email)) return false;
+        if (!Objects.equals(lastLogin, that.lastLogin)) return false;
+        return Objects.equals(admin, that.admin);
     }
 
     @Override
