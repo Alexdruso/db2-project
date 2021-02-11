@@ -6,7 +6,11 @@ import java.util.Objects;
 @Entity
 @Table(name = "answer", schema = "db2")
 public class AnswerEntity {
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     private Long id;
+    @Column(nullable = false)
     private String text;
 
     @ManyToOne
@@ -17,6 +21,14 @@ public class AnswerEntity {
     @JoinColumn(name = "QUESTIONNAIRE_SUBMISSION_ID", nullable = false)
     private QuestionnaireSubmissionEntity questionnaireSubmission;
 
+    public void setQuestion(QuestionEntity question) {
+        this.question = question;
+    }
+
+    public QuestionEntity getQuestion() {
+        return question;
+    }
+
     public QuestionnaireSubmissionEntity getQuestionnaireSubmission() {
         return questionnaireSubmission;
     }
@@ -25,9 +37,6 @@ public class AnswerEntity {
         this.questionnaireSubmission = questionnaireSubmission;
     }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -55,9 +64,7 @@ public class AnswerEntity {
         AnswerEntity that = (AnswerEntity) o;
 
         if (!Objects.equals(id, that.id)) return false;
-        if (!Objects.equals(text, that.text)) return false;
-
-        return true;
+        return Objects.equals(text, that.text);
     }
 
     @Override
