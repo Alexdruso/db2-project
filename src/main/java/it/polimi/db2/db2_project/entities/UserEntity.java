@@ -14,10 +14,14 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+    @Column(nullable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
     private Date lastLogin;
+    @Column(nullable = false)
     private byte ban;
     private Byte admin;
 
@@ -40,7 +44,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "username", nullable = false)
+    @Column(name = "username")
     public String getUsername() {
         return username;
     }
@@ -50,7 +54,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     public String getPassword() {
         return password;
     }
@@ -60,7 +64,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     public String getEmail() {
         return email;
     }
