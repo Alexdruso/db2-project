@@ -9,6 +9,10 @@ public class AnswerEntity {
     private Long id;
     private String text;
 
+    @ManyToOne
+    @JoinColumn(name = "question_id")
+    private QuestionEntity question;
+
     @Id
     @GeneratedValue
     @Column(name = "id")

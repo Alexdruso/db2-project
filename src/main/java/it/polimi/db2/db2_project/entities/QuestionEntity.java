@@ -1,6 +1,7 @@
 package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -10,6 +11,15 @@ public class QuestionEntity {
     private String text;
     private byte optional;
 
+    @ManyToMany
+    @JoinTable(name = "questionnaire_to_question", schema = "db2",
+            joinColumns = @JoinColumn(name = "questionnaire_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_id"))
+    private List<QuestionnaireEntity> questionnaires;
+    @OneToMany(mappedBy = "question_id",
+            cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<AnswerEntity> answers;
+    
     @Id
     @GeneratedValue
     @Column(name = "id")
@@ -41,6 +51,10 @@ public class QuestionEntity {
     public void setOptional(byte optional) {
         this.optional = optional;
     }
+
+
+
+
 
     @Override
     public boolean equals(Object o) {

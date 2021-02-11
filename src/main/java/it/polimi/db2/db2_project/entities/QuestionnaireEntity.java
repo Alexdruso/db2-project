@@ -2,6 +2,8 @@ package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -9,6 +11,11 @@ import java.util.Objects;
 public class QuestionnaireEntity {
     private Long id;
     private Date date;
+    @ManyToMany
+    @JoinTable(name = "questionnaire_to_question", schema = "db2",
+               joinColumns = @JoinColumn(name = "question_id"),
+               inverseJoinColumns = @JoinColumn(name = "questionnaire_id"))
+    private List<QuestionEntity> questions;
 
     @Id
     @GeneratedValue
