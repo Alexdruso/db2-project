@@ -1,15 +1,17 @@
 package it.polimi.db2.db2_project.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 
 /**
  * The type Offensive word.
  */
 @Table(name = "OFFENSIVE_WORD")
 @Entity
+@NamedQuery(
+        name="findAllOffensiveWords",
+        query="SELECT w FROM OffensiveWord w"
+)
 public class OffensiveWord {
     @Id
     @Column(name = "WORD", nullable = false)
