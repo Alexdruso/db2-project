@@ -9,8 +9,8 @@ import java.util.Objects;
 public class QuestionEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     @Column(nullable = false)
     private String text;

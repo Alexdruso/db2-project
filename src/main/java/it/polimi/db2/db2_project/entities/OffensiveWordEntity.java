@@ -7,6 +7,7 @@ import java.util.Objects;
 @Table(name = "offensive_word", schema = "db2")
 @NamedQuery(name = "OffensiveWord.findAll", query = "SELECT w FROM OffensiveWordEntity w")
 public class OffensiveWordEntity {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "word", nullable = false)
     private String word;

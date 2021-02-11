@@ -7,8 +7,8 @@ import java.util.Objects;
 @Table(name = "answer", schema = "db2")
 public class AnswerEntity {
     @Id
-    @GeneratedValue
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     @Column(nullable = false)
     private String text;
