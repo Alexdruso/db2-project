@@ -3,6 +3,7 @@ package it.polimi.db2.db2_project.entities;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +20,12 @@ public class UserEntity {
     private Date lastLogin;
     private byte ban;
     private Byte admin;
+
+    //relationships definition part
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuestionnaireEntity> questionnaires;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuestionnaireSubmissionEntity> questionnaireSubmissions;
 
     public Long getId() {
         return id;
@@ -90,6 +97,16 @@ public class UserEntity {
 
     public void setAdmin(Byte admin) {
         this.admin = admin;
+    }
+
+
+    public List<QuestionnaireEntity> getQuestionnaires() {
+        return questionnaires;
+    }
+
+
+    public List<QuestionnaireSubmissionEntity> getQuestionnaireSubmissions() {
+        return questionnaireSubmissions;
     }
 
     @Override
