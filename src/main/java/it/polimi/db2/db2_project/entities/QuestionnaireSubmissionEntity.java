@@ -1,17 +1,57 @@
 package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "questionnaire_submission", schema = "db2")
 public class QuestionnaireSubmissionEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
+    @Basic
+    @Column(name = "points")
     private Integer points;
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
+    //relationships definition part
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private UserEntity user;
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "QUESTIONNAIRE_ID", nullable = false)
+    private QuestionnaireEntity questionnaire;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "questionnaireSubmission", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AnswerEntity> answers;
+
+    public List<AnswerEntity> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<AnswerEntity> answers) {
+        this.answers = answers;
+    }
+
+    public QuestionnaireEntity getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(QuestionnaireEntity questionnaire) {
+        this.questionnaire = questionnaire;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
     public Long getId() {
         return id;
     }
@@ -20,15 +60,8 @@ public class QuestionnaireSubmissionEntity {
         this.id = id;
     }
 
-
-    @Basic
-    @Column(name = "points")
     public Integer getPoints() {
         return points;
-    }
-
-    public void setPoints(Integer points) {
-        this.points = points;
     }
 
     @Override
@@ -39,9 +72,7 @@ public class QuestionnaireSubmissionEntity {
         QuestionnaireSubmissionEntity that = (QuestionnaireSubmissionEntity) o;
 
         if (!Objects.equals(id, that.id)) return false;
-        if (!Objects.equals(points, that.points)) return false;
-
-        return true;
+        return Objects.equals(points, that.points);
     }
 
     @Override

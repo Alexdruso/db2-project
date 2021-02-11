@@ -13,6 +13,18 @@ public class AnswerEntity {
     @JoinColumn(name = "question_id")
     private QuestionEntity question;
 
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "QUESTIONNAIRE_SUBMISSION_ID", nullable = false)
+    private QuestionnaireSubmissionEntity questionnaireSubmission;
+
+    public QuestionnaireSubmissionEntity getQuestionnaireSubmission() {
+        return questionnaireSubmission;
+    }
+
+    public void setQuestionnaireSubmission(QuestionnaireSubmissionEntity questionnaireSubmission) {
+        this.questionnaireSubmission = questionnaireSubmission;
+    }
+
     @Id
     @GeneratedValue
     @Column(name = "id")
