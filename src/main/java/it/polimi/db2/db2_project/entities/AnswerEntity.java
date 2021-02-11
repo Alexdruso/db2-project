@@ -13,7 +13,8 @@ public class AnswerEntity {
     @Column(nullable = false)
     private String text;
 
-    @ManyToOne
+    //relationships definition part
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "question_id")
     private QuestionEntity question;
 

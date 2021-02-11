@@ -7,22 +7,31 @@ import java.util.Objects;
 @Entity
 @Table(name = "question", schema = "db2")
 public class QuestionEntity {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     private Long id;
+    @Column(nullable = false)
     private String text;
+    @Column(nullable = false)
     private byte optional;
 
-    @ManyToMany
+    //relationships definition part
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "questionnaire_to_question", schema = "db2",
             joinColumns = @JoinColumn(name = "questionnaire_id"),
             inverseJoinColumns = @JoinColumn(name = "question_id"))
     private List<QuestionnaireEntity> questionnaires;
+
     @OneToMany(mappedBy = "question_id",
             cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<AnswerEntity> answers;
-    
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
+
+    public List<QuestionnaireEntity> getQuestionnaires() {
+        return questionnaires;
+    }
+
     public Long getId() {
         return id;
     }
@@ -65,9 +74,7 @@ public class QuestionEntity {
 
         if (optional != that.optional) return false;
         if (!Objects.equals(id, that.id)) return false;
-        if (!Objects.equals(text, that.text)) return false;
-
-        return true;
+        return Objects.equals(text, that.text);
     }
 
     @Override
