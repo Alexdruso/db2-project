@@ -11,7 +11,6 @@
         <class>it.polimi.db2.db2_project.entities.QuestionEntity</class>
         <class>it.polimi.db2.db2_project.entities.QuestionnaireEntity</class>
         <class>it.polimi.db2.db2_project.entities.QuestionnaireSubmissionEntity</class>
-        <class>it.polimi.db2.db2_project.entities.QuestionnaireToQuestionEntity</class>
         <class>it.polimi.db2.db2_project.entities.UserEntity</class>
         <properties>
             <property name="toplink.jdbc.url"
