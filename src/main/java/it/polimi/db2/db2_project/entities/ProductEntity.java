@@ -2,18 +2,35 @@ package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "product", schema = "db2")
 public class ProductEntity {
-    private Long id;
-    private String name;
-    private byte[] image;
-
     @Id
     @GeneratedValue
     @Column(name = "id")
+    private Long id;
+    @Column(nullable = false)
+    private String name;
+    @Lob
+    @Column
+    private byte[] image;
+
+    //relationships definition part
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuestionnaireEntity> questionnaire;
+
+    public List<QuestionnaireEntity> getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(List<QuestionnaireEntity> questionnaire) {
+        this.questionnaire = questionnaire;
+    }
+
     public Long getId() {
         return id;
     }
@@ -52,9 +69,7 @@ public class ProductEntity {
 
         if (!Objects.equals(id, that.id)) return false;
         if (!Objects.equals(name, that.name)) return false;
-        if (!Arrays.equals(image, that.image)) return false;
-
-        return true;
+        return Arrays.equals(image, that.image);
     }
 
     @Override
