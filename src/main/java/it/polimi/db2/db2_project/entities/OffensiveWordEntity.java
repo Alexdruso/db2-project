@@ -5,28 +5,14 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "offensive_word", schema = "db2")
+@NamedQuery(name = "OffensiveWord.findAll", query = "SELECT w FROM OffensiveWordEntity w")
 public class OffensiveWordEntity {
-    private Long id;
+    @Id
+    @Column(name = "word", nullable = false)
     private String word;
 
-    @Id
-    @GeneratedValue
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Id
-    @Column(name = "word")
     public String getWord() {
         return word;
-    }
-
-    public void setWord(String word) {
-        this.word = word;
     }
 
     @Override
@@ -36,9 +22,7 @@ public class OffensiveWordEntity {
 
         OffensiveWordEntity that = (OffensiveWordEntity) o;
 
-        if (!Objects.equals(word, that.word)) return false;
-
-        return true;
+        return Objects.equals(word, that.word);
     }
 
     @Override
