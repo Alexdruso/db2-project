@@ -1,9 +1,10 @@
 package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
-@Table(name = "answer", schema = "db2", catalog = "")
+@Table(name = "answer", schema = "db2")
 public class AnswerEntity {
     private Long id;
     private String text;
@@ -15,13 +16,10 @@ public class AnswerEntity {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
+
 
     @Basic
     @Column(name = "text")
@@ -40,8 +38,8 @@ public class AnswerEntity {
 
         AnswerEntity that = (AnswerEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (text != null ? !text.equals(that.text) : that.text != null) return false;
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(text, that.text)) return false;
 
         return true;
     }

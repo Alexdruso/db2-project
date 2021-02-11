@@ -1,9 +1,10 @@
 package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
-@Table(name = "offensive_word", schema = "db2", catalog = "")
+@Table(name = "offensive_word", schema = "db2")
 public class OffensiveWordEntity {
     private Long id;
     private String word;
@@ -35,7 +36,7 @@ public class OffensiveWordEntity {
 
         OffensiveWordEntity that = (OffensiveWordEntity) o;
 
-        if (word != null ? !word.equals(that.word) : that.word != null) return false;
+        if (!Objects.equals(word, that.word)) return false;
 
         return true;
     }

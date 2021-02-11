@@ -3,7 +3,7 @@ package it.polimi.db2.db2_project.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "questionnaire_to_question", schema = "db2", catalog = "")
+@Table(name = "questionnaire_to_question", schema = "db2")
 @IdClass(QuestionnaireToQuestionEntityPK.class)
 public class QuestionnaireToQuestionEntity {
     private Long id;

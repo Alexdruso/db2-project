@@ -2,9 +2,10 @@ package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Objects;
 
 @Entity
-@Table(name = "questionnaire", schema = "db2", catalog = "")
+@Table(name = "questionnaire", schema = "db2")
 public class QuestionnaireEntity {
     private Long id;
     private Date date;
@@ -16,13 +17,10 @@ public class QuestionnaireEntity {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
+
 
     @Basic
     @Column(name = "date")
@@ -41,8 +39,8 @@ public class QuestionnaireEntity {
 
         QuestionnaireEntity that = (QuestionnaireEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (date != null ? !date.equals(that.date) : that.date != null) return false;
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(date, that.date)) return false;
 
         return true;
     }

@@ -2,9 +2,10 @@ package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.Objects;
 
 @Entity
-@Table(name = "product", schema = "db2", catalog = "")
+@Table(name = "product", schema = "db2")
 public class ProductEntity {
     private Long id;
     private String name;
@@ -17,13 +18,10 @@ public class ProductEntity {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
+
 
     @Basic
     @Column(name = "name")
@@ -52,8 +50,8 @@ public class ProductEntity {
 
         ProductEntity that = (ProductEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(name, that.name)) return false;
         if (!Arrays.equals(image, that.image)) return false;
 
         return true;
