@@ -1,25 +1,70 @@
 package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
-import java.sql.Date;
-import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "questionnaire", schema = "db2")
 public class QuestionnaireEntity {
-    private Long id;
-    private Date date;
-    @ManyToMany
-    @JoinTable(name = "questionnaire_to_question", schema = "db2",
-               joinColumns = @JoinColumn(name = "question_id"),
-               inverseJoinColumns = @JoinColumn(name = "questionnaire_id"))
-    private List<QuestionEntity> questions;
-
     @Id
     @GeneratedValue
     @Column(name = "id")
+    private Long id;
+
+    private Date date;
+
+    //relationships definition part
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "questionnaire_to_question", schema = "db2",
+            joinColumns = @JoinColumn(name = "question_id"),
+            inverseJoinColumns = @JoinColumn(name = "questionnaire_id"))
+    private List<QuestionEntity> questions;
+
+    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuestionnaireSubmissionEntity> questionnaireSubmissions;
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private UserEntity user;
+
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private ProductEntity product;
+
+    public ProductEntity getProductEntity() {
+        return product;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.product = productEntity;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity userEntity) {
+        this.user = userEntity;
+    }
+
+    public List<QuestionnaireSubmissionEntity> getQuestionnaireSubmissions() {
+        return questionnaireSubmissions;
+    }
+
+    public void setQuestionnaireSubmissions(List<QuestionnaireSubmissionEntity> questionnaireSubmissions) {
+        this.questionnaireSubmissions = questionnaireSubmissions;
+    }
+
+    public void setQuestions(List<QuestionEntity> questions) {
+        this.questions = questions;
+    }
+
+    public List<QuestionEntity> getQuestions() {
+        return questions;
+    }
+
     public Long getId() {
         return id;
     }
@@ -28,8 +73,7 @@ public class QuestionnaireEntity {
         this.id = id;
     }
 
-
-    @Basic
+    @Temporal(TemporalType.DATE)
     @Column(name = "date")
     public Date getDate() {
         return date;
@@ -47,9 +91,7 @@ public class QuestionnaireEntity {
         QuestionnaireEntity that = (QuestionnaireEntity) o;
 
         if (!Objects.equals(id, that.id)) return false;
-        if (!Objects.equals(date, that.date)) return false;
-
-        return true;
+        return Objects.equals(date, that.date);
     }
 
     @Override
