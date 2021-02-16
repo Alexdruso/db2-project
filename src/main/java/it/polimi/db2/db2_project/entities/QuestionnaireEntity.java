@@ -15,11 +15,7 @@ import java.util.Objects;
                         query = "SELECT q " +
                                 "FROM QuestionnaireEntity q " +
                                 "WHERE q.date = :date"
-                )
-        }
-)
-@NamedQueries(
-        {
+                ),
                 @NamedQuery(
                         name = "Questionnaire.findAll",
                         query = "SELECT q " +
