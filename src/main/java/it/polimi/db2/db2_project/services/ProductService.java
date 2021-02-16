@@ -16,7 +16,7 @@ public class ProductService {
     @PersistenceContext
     private EntityManager em;
 
-    public Optional<ProductEntity> findProductOfTheDay() {
+    public Optional<ProductEntity> findCurrentProduct() {
         return findByDate(new Date());
     }
 
