@@ -6,6 +6,16 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "question", schema = "db2")
+@NamedQueries(
+        {
+                @NamedQuery(
+                        name = "Question.findByQuestionnaire",
+                        query = "SELECT q " +
+                                "FROM QuestionEntity q JOIN QuestionnaireEntity qr " +
+                                "WHERE q.optional = :optional AND qr.id = :questionnaireId"
+                )
+        }
+)
 public class QuestionEntity {
 
     @Id

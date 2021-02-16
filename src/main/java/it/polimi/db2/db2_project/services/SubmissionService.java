@@ -20,7 +20,6 @@ public class SubmissionService {
 
     public Optional<QuestionnaireEntity> findCurrentQuestionnaire() {
         return findQuestionnaireByDate(new Date());
-        return null;
     }
 
     public Optional<QuestionnaireEntity> findQuestionnaireByDate(Date date) {
@@ -32,13 +31,17 @@ public class SubmissionService {
     }
 
     public List<QuestionEntity> findMarketingQuestions(long questionnaireId) {
-        //TODO
-        return null;
+        return em.createNamedQuery("Question.findByQuestionnaire", QuestionEntity.class)
+                .setParameter("optional", 0)
+                .setParameter("questionnaireId", questionnaireId)
+                .getResultList();
     }
 
     public List<QuestionEntity> findStatisticalQuestions(long questionnaireId) {
-        //TODO
-        return null;
+        return em.createNamedQuery("Question.findByQuestionnaire", QuestionEntity.class)
+                .setParameter("optional", 1)
+                .setParameter("questionnaireId", questionnaireId)
+                .getResultList();
     }
 
     /**
@@ -59,7 +62,7 @@ public class SubmissionService {
         return false;
     }
 
-    public List<AnswerEntity> getAnswers(long userId, long questionId) {
+    public List<AnswerEntity> findAnswers(long userId, long questionnaireId) {
         //TODO Useful for changing marketing question
         return null;
     }
