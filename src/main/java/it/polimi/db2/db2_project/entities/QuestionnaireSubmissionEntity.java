@@ -5,6 +5,15 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@NamedQueries(
+        {
+                @NamedQuery(
+                        name = "Questionnaire.",
+                        query = ""
+
+                )
+        }
+)
 @Table(name = "questionnaire_submission", schema = "db2")
 public class QuestionnaireSubmissionEntity {
     @Id

@@ -7,6 +7,28 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "questionnaire", schema = "db2")
+@NamedQueries(
+        {
+                @NamedQuery(
+                        name = "Questionnaire.findAll",
+                        query = "SELECT q " +
+                                "FROM QuestionnaireEntity q"
+                ),
+                @NamedQuery(
+                        name = "Questionnaire.findSubmitters",
+                        query = "SELECT u " +
+                                "FROM QuestionnaireSubmissionEntity s JOIN s.user u " +
+                                "WHERE s.points > 0 AND s.questionnaire = :id  "
+                ),
+                @NamedQuery(
+                        name = "Questionnaire.findCancellation",
+                        query = "SELECT u " +
+                                "FROM QuestionnaireSubmissionEntity s JOIN s.user u " +
+                                "WHERE s.points = 0 AND s.questionnaire = :id  "
+                )
+
+        }
+)
 public class QuestionnaireEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
