@@ -1,12 +1,23 @@
 package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "questionnaire", schema = "db2")
+@NamedQueries(
+        {
+                @NamedQuery(
+                        name = "Questionnaire.findByDate",
+                        query = "SELECT q " +
+                                "FROM QuestionnaireEntity q " +
+                                "WHERE q.date = :date"
+                )
+        }
+)
 public class QuestionnaireEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +31,10 @@ public class QuestionnaireEntity {
     @JoinTable(name = "questionnaire_to_question", schema = "db2",
             joinColumns = @JoinColumn(name = "question_id"),
             inverseJoinColumns = @JoinColumn(name = "questionnaire_id"))
-    private List<QuestionEntity> questions;
+    private List<QuestionEntity> questions = new ArrayList<>();
 
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<QuestionnaireSubmissionEntity> questionnaireSubmissions;
+    private List<QuestionnaireSubmissionEntity> questionnaireSubmissions = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "USER_ID", nullable = false)
@@ -32,6 +43,15 @@ public class QuestionnaireEntity {
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
+
+    public QuestionnaireEntity() {
+    }
+
+    public QuestionnaireEntity(Date date, UserEntity user, ProductEntity product) {
+        this.date = date;
+        this.user = user;
+        this.product = product;
+    }
 
     public ProductEntity getProductEntity() {
         return product;
