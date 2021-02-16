@@ -5,6 +5,16 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "answer", schema = "db2")
+@NamedQueries(
+        {
+                @NamedQuery(
+                        name = "Product.findReviewsByProduct",
+                        query = "SELECT a " +
+                                "FROM AnswerEntity a JOIN QuestionnaireSubmissionEntity qs JOIN QuestionnaireEntity q JOIN ProductEntity p " +
+                                "WHERE p.id = :productId"
+                )
+        }
+)
 public class AnswerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

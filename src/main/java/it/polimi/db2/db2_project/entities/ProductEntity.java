@@ -7,6 +7,16 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "product", schema = "db2")
+@NamedQueries(
+        {
+                @NamedQuery(
+                        name = "Product.findByDate",
+                        query = "SELECT p " +
+                                "FROM ProductEntity p JOIN QuestionnaireEntity q " +
+                                "WHERE q.date = :date"
+                ),
+        }
+)
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
