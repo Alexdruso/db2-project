@@ -15,6 +15,11 @@ import java.util.Objects;
                                 "FROM ProductEntity p JOIN QuestionnaireEntity q " +
                                 "WHERE q.date = :date"
                 ),
+                @NamedQuery(
+                        name = "Product.findAll",
+                        query = "SELECT p " +
+                                "FROM ProductEntity p"
+                ),
         }
 )
 public class ProductEntity {

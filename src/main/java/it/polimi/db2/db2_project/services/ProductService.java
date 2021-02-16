@@ -33,4 +33,8 @@ public class ProductService {
                 .setParameter("productId", product.getId())
                 .getResultList();
     }
+
+    public List<ProductEntity> findAllProducts() {
+        return em.createNamedQuery("Product.findAll", ProductEntity.class).getResultList();
+    }
 }
