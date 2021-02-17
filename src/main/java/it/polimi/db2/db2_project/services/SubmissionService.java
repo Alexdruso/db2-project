@@ -1,16 +1,15 @@
 package it.polimi.db2.db2_project.services;
 
 import it.polimi.db2.db2_project.entities.AnswerEntity;
+import it.polimi.db2.db2_project.entities.OffensiveWordEntity;
 import it.polimi.db2.db2_project.entities.QuestionEntity;
 import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Stateless
 public class SubmissionService {
@@ -45,25 +44,69 @@ public class SubmissionService {
     }
 
     /**
-     *
      * @param userId
      * @param answers A map having as keys the question ID and as values the strings
      * @return
      */
-    public boolean submitMarketingAnswers(long userId, Map<Long, String> answers) {
+    public void submitMarketingAnswers(long userId, Map<Long, String> answers) {
         //TODO CHeck badwors
         //TODO Chcek all answers present
         //TODO CHeck if already presented
-        return false;
     }
 
-    public boolean submitStatisticalAnswers(long userId, Map<Long,String> answers) {
+    public void submitStatisticalAnswers(long userId, Map<Long, String> answers) {
         //TODO
-        return false;
     }
 
     public List<AnswerEntity> findAnswers(long userId, long questionnaireId) {
         //TODO Useful for changing marketing question
         return null;
+    }
+
+    public boolean checkOffensiveWords(List<String> answers) {
+        List<String> offensiveWords = em.createNamedQuery("OffensiveWord.findAll", OffensiveWordEntity.class)
+                .getResultStream()
+                .map(OffensiveWordEntity::getWord)
+                .collect(Collectors.toList());
+
+        return answers.stream().anyMatch(
+                answer -> checkOffensiveWords(
+                        answer,
+                        offensiveWords
+                )
+        );
+    }
+
+    /**
+     * This method checks if an answer contains any offensive word.
+     * The check is case insensitive.
+     *
+     * @param answer the answer to be checked
+     * @return true if the answer does contains any offensive word
+     */
+    public boolean checkOffensiveWords(String answer) {
+        return checkOffensiveWords(
+                answer,
+                em.createNamedQuery("OffensiveWord.findAll", OffensiveWordEntity.class)
+                        .getResultStream()
+                        .map(OffensiveWordEntity::getWord)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * This method checks if an answer contains any of the listed offensive words.
+     * The check is case insensitive.
+     *
+     * @param answer         the answer to be checked
+     * @param offensiveWords the offensive words
+     * @return true if the answer does contains any offensive word
+     */
+    public boolean checkOffensiveWords(String answer, List<String> offensiveWords) {
+        return offensiveWords
+                .stream()
+                .anyMatch(
+                        offensiveWord -> answer.toLowerCase(Locale.ROOT).contains(offensiveWord.toLowerCase(Locale.ROOT))
+                );
     }
 }
