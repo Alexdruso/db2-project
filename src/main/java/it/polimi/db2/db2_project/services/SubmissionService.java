@@ -57,19 +57,27 @@ public class SubmissionService {
         return questionnaireSubmission;
     }
 
-    /**
-     * @param userId
-     * @param answers A map having as keys the question ID and as values the strings
-     * @return
-     */
-    public void submitMarketingAnswers(long userId, Map<Long, String> answers) {
+    public void submitMarketingAnswers(long questionnaireId, long userId, Map<Long, String> answers) {
         //TODO CHeck badwors
         //TODO Chcek all answers present
         //TODO CHeck if already presented
     }
 
-    public void submitStatisticalAnswers(long userId, Map<Long, String> answers) {
+    public void submitMarketingAnswers(long questionnaireSubmissionId, Map<Long, String> answers) {
+    }
+
+    public void submitStatisticalAnswers(long questionnaireId, long userId, Map<Long, String> answers) {
         //TODO
+    }
+
+    public void submitStatisticalAnswers(long questionnaireSubmissionId, Map<Long, String> answers) {
+        //TODO
+    }
+
+    public void updateAnswer(long questionId, long questionnaireId, long userId, String answer) {
+    }
+
+    public void updateAnswer(long questionnaireSubmissionId, long questionId) {
     }
 
     public List<AnswerEntity> findAnswers(long userId, long questionnaireId) {
