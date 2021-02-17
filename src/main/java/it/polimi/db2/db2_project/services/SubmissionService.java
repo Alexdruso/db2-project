@@ -57,14 +57,16 @@ public class SubmissionService {
         return questionnaireSubmission;
     }
 
-    public QuestionnaireSubmissionEntity findQuestionnaireSubmission(long userId, long questionnaireId) {
-        return em.createNamedQuery(
-                "QuestionnaireSubmission.findByUserAndQuestionnaire",
-                QuestionnaireSubmissionEntity.class
-        )
-                .setParameter("userId", userId)
-                .setParameter("questionnaireId", questionnaireId)
-                .getSingleResult();
+    public Optional<QuestionnaireSubmissionEntity> findQuestionnaireSubmission(long userId, long questionnaireId) {
+        return Optional.ofNullable(
+                em.createNamedQuery(
+                        "QuestionnaireSubmission.findByUserAndQuestionnaire",
+                        QuestionnaireSubmissionEntity.class
+                )
+                        .setParameter("userId", userId)
+                        .setParameter("questionnaireId", questionnaireId)
+                        .getSingleResult()
+        );
     }
 
 
@@ -103,10 +105,36 @@ public class SubmissionService {
         em.flush();
     }
 
-    public void updateAnswer(long questionId, long questionnaireId, long userId, String answer) {
+    public void updateAnswer(long questionId, long questionnaireId, long userId, String answerText) {
+        this.findQuestionnaireSubmission(userId, questionnaireId).ifPresentOrElse(
+                questionnaireSubmission -> this.updateAnswer(
+                        questionId,
+                        questionnaireSubmission.getId(),
+                        answerText
+                ),
+                () -> {
+                    throw new IllegalArgumentException(
+                            String.format(
+                                    "Questionnaire submission for questionnaire with with ID = %d does not exist!",
+                                    questionnaireId
+                            )
+                    );
+                }
+        );
+
     }
 
-    public void updateAnswer(long questionnaireSubmissionId, long questionId) {
+    public void updateAnswer(long questionId, long questionnaireSubmissionId, String answerText) {
+        AnswerEntity answer = em.createNamedQuery("Answer.findAnswerByQuestionAndQuestionnaireSubmission", AnswerEntity.class)
+                .setParameter("questionId", questionId)
+                .setParameter("questionnaireSubmissionId", questionnaireSubmissionId)
+                .getSingleResult();
+
+        answer.setText(answerText);
+
+        em.persist(answer);
+
+        em.flush();
     }
 
     public List<AnswerEntity> findAnswers(long userId, long questionnaireId) {
