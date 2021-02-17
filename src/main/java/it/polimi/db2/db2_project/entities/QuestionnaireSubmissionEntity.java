@@ -24,7 +24,7 @@ import java.util.Objects;
                                 "AND q.id = :questionnaireId"
                 ),
                 @NamedQuery(
-                        name = "QuestionnaireSubmission.findLeaderboard",
+                        name = "QuestionnaireSubmission.findLeaderboardByDate",
                         query = "SELECT qs.user.username, qs.points " +
                                 "FROM QuestionnaireSubmissionEntity qs " +
                                 "JOIN QuestionnaireEntity q " +
