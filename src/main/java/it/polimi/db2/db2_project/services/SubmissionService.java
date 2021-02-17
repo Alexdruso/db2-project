@@ -15,10 +15,10 @@ public class SubmissionService {
     private EntityManager em;
 
     public Optional<QuestionnaireEntity> findCurrentQuestionnaire() {
-        return findQuestionnaireByDate(new Date());
+        return findQuestionnaire(new Date());
     }
 
-    public Optional<QuestionnaireEntity> findQuestionnaireByDate(Date date) {
+    public Optional<QuestionnaireEntity> findQuestionnaire(Date date) {
         return Optional.ofNullable(
                 em.createNamedQuery("Questionnaire.findByDate", QuestionnaireEntity.class)
                         .setParameter("date", date)
@@ -57,21 +57,32 @@ public class SubmissionService {
         return questionnaireSubmission;
     }
 
-    public void submitMarketingAnswers(long questionnaireId, long userId, Map<Long, String> answers) {
-        //TODO CHeck badwors
-        //TODO Chcek all answers present
-        //TODO CHeck if already presented
+    public QuestionnaireSubmissionEntity findQuestionnaireSubmission(long userId, long questionnaireId) {
+        return null;
     }
 
-    public void submitMarketingAnswers(long questionnaireSubmissionId, Map<Long, String> answers) {
-    }
 
-    public void submitStatisticalAnswers(long questionnaireId, long userId, Map<Long, String> answers) {
+    public void submitAnswers(long questionnaireId, long userId, Map<Long, String> answers) {
         //TODO
     }
 
-    public void submitStatisticalAnswers(long questionnaireSubmissionId, Map<Long, String> answers) {
-        //TODO
+    public void submitAnswers(long questionnaireSubmissionId, Map<Long, String> answers) {
+        QuestionnaireSubmissionEntity questionnaireSubmission = em.find(QuestionnaireSubmissionEntity.class, questionnaireSubmissionId);
+
+        answers.keySet().forEach(
+                questionId -> {
+                    QuestionEntity question = em.find(QuestionEntity.class, questionId);
+                    AnswerEntity answer = new AnswerEntity(answers.get(questionId), question, questionnaireSubmission);
+
+                    questionnaireSubmission.addAnswer(answer);
+                    question.addAnswer(answer);
+
+                    em.persist(question);
+                    em.persist(answer);
+                }
+        );
+
+        em.persist(questionnaireSubmission);
     }
 
     public void updateAnswer(long questionId, long questionnaireId, long userId, String answer) {
