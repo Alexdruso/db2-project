@@ -91,8 +91,8 @@ public class QuestionnaireEntity {
         return questionnaireSubmissions;
     }
 
-    public void setQuestionnaireSubmissions(List<QuestionnaireSubmissionEntity> questionnaireSubmissions) {
-        this.questionnaireSubmissions = questionnaireSubmissions;
+    public void addQuestionnaireSubmission(QuestionnaireSubmissionEntity questionnaireSubmission) {
+        this.questionnaireSubmissions.add(questionnaireSubmission);
     }
 
     public void setQuestions(List<QuestionEntity> questions) {
