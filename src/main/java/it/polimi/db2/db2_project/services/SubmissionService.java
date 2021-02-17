@@ -99,6 +99,8 @@ public class SubmissionService {
         );
 
         em.persist(questionnaireSubmission);
+
+        em.flush();
     }
 
     public void updateAnswer(long questionId, long questionnaireId, long userId, String answer) {
