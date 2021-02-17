@@ -22,6 +22,14 @@ import java.util.Objects;
                                 "JOIN QuestionnaireEntity q " +
                                 "WHERE u.id = :userId " +
                                 "AND q.id = :questionnaireId"
+                ),
+                @NamedQuery(
+                        name = "QuestionnaireSubmission.findLeaderboard",
+                        query = "SELECT qs.user.username, qs.points " +
+                                "FROM QuestionnaireSubmissionEntity qs " +
+                                "JOIN QuestionnaireEntity q " +
+                                "WHERE q.date = :date " +
+                                "ORDER BY qs.user.username"
                 )
         }
 )
