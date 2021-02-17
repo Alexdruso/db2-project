@@ -1,9 +1,6 @@
 package it.polimi.db2.db2_project.services;
 
-import it.polimi.db2.db2_project.entities.AnswerEntity;
-import it.polimi.db2.db2_project.entities.OffensiveWordEntity;
-import it.polimi.db2.db2_project.entities.QuestionEntity;
-import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
+import it.polimi.db2.db2_project.entities.*;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -41,6 +38,23 @@ public class SubmissionService {
                 .setParameter("optional", 1)
                 .setParameter("questionnaireId", questionnaireId)
                 .getResultList();
+    }
+
+    public QuestionnaireSubmissionEntity createQuestionnaireSubmission(long userId, long questionnaireId) {
+        UserEntity user = em.find(UserEntity.class, userId);
+        QuestionnaireEntity questionnare = em.find(QuestionnaireEntity.class, questionnaireId);
+        QuestionnaireSubmissionEntity questionnaireSubmission = new QuestionnaireSubmissionEntity(user, questionnare);
+
+        user.addQuestionnaireSubmission(questionnaireSubmission);
+        questionnare.addQuestionnaireSubmission(questionnaireSubmission);
+
+        em.persist(user);
+        em.persist(questionnare);
+        em.persist(questionnaireSubmission);
+
+        em.flush();
+
+        return questionnaireSubmission;
     }
 
     /**
