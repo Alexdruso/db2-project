@@ -13,6 +13,15 @@ import java.util.Objects;
                         query = "SELECT a " +
                                 "FROM QuestionnaireSubmissionEntity s JOIN s.answers a " +
                                 "WHERE s.user.id = :userId AND s.questionnaire.id = :questionnaireId"
+                ),
+                @NamedQuery(
+                        name = "QuestionnaireSubmission.findByUserAndQuestionnaire",
+                        query = "SELECT qs " +
+                                "FROM QuestionnaireSubmissionEntity qs " +
+                                "JOIN UserEntity u " +
+                                "JOIN QuestionnaireEntity q " +
+                                "WHERE u.id = :userId " +
+                                "AND q.id = :questionnaireId"
                 )
         }
 )

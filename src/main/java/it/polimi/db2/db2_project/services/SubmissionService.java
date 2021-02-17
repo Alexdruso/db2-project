@@ -58,12 +58,28 @@ public class SubmissionService {
     }
 
     public QuestionnaireSubmissionEntity findQuestionnaireSubmission(long userId, long questionnaireId) {
-        return null;
+        return em.createNamedQuery(
+                "QuestionnaireSubmission.findByUserAndQuestionnaire",
+                QuestionnaireSubmissionEntity.class
+        )
+                .setParameter("userId", userId)
+                .setParameter("questionnaireId", questionnaireId)
+                .getSingleResult();
     }
 
 
     public void submitAnswers(long questionnaireId, long userId, Map<Long, String> answers) {
-        //TODO
+        submitAnswers(
+                em.createNamedQuery(
+                        "QuestionnaireSubmission.findByUserAndQuestionnaire",
+                        QuestionnaireSubmissionEntity.class
+                )
+                        .setParameter("userId", userId)
+                        .setParameter("questionnaireId", questionnaireId)
+                        .getSingleResult()
+                        .getId(),
+                answers
+        );
     }
 
     public void submitAnswers(long questionnaireSubmissionId, Map<Long, String> answers) {
