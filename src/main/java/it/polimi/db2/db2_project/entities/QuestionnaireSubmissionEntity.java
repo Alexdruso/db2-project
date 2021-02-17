@@ -50,8 +50,8 @@ public class QuestionnaireSubmissionEntity {
         return answers;
     }
 
-    public void setAnswers(List<AnswerEntity> answers) {
-        this.answers = answers;
+    public void addAnswer(AnswerEntity answer) {
+        this.answers.add(answer);
     }
 
     public QuestionnaireEntity getQuestionnaire() {

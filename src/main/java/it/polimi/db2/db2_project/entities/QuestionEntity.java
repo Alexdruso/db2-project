@@ -71,9 +71,13 @@ public class QuestionEntity {
         this.optional = optional;
     }
 
+    public List<AnswerEntity> getAnswers() {
+        return answers;
+    }
 
-
-
+    public void addAnswer(AnswerEntity answer) {
+        answers.add(answer);
+    }
 
     @Override
     public boolean equals(Object o) {
