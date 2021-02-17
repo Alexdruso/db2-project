@@ -73,8 +73,10 @@ public class SubmissionService {
     }
 
     public List<AnswerEntity> findAnswers(long userId, long questionnaireId) {
-        //TODO Useful for changing marketing question
-        return null;
+        return em.createNamedQuery("Answer.findAnswersByUserAndQuestionnaire", AnswerEntity.class)
+                .setParameter("userId", userId)
+                .setParameter("questionnaireId", questionnaireId)
+                .getResultList();
     }
 
     /**
