@@ -63,6 +63,13 @@ public class SubmissionService {
         return null;
     }
 
+    /**
+     * This method checks if a list of answers contains any offensive word.
+     * The check is case insensitive.
+     *
+     * @param answers the answers to be checked
+     * @return true if anw answer contains any offensive word
+     */
     public boolean checkOffensiveWords(List<String> answers) {
         List<String> offensiveWords = em.createNamedQuery("OffensiveWord.findAll", OffensiveWordEntity.class)
                 .getResultStream()
@@ -82,7 +89,7 @@ public class SubmissionService {
      * The check is case insensitive.
      *
      * @param answer the answer to be checked
-     * @return true if the answer does contains any offensive word
+     * @return true if the answer contains any offensive word
      */
     public boolean checkOffensiveWords(String answer) {
         return checkOffensiveWords(
@@ -100,7 +107,7 @@ public class SubmissionService {
      *
      * @param answer         the answer to be checked
      * @param offensiveWords the offensive words
-     * @return true if the answer does contains any offensive word
+     * @return true if the answer contains any offensive word
      */
     public boolean checkOffensiveWords(String answer, List<String> offensiveWords) {
         return offensiveWords
