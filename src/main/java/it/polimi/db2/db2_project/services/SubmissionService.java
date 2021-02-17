@@ -42,14 +42,14 @@ public class SubmissionService {
 
     public QuestionnaireSubmissionEntity createQuestionnaireSubmission(long userId, long questionnaireId) {
         UserEntity user = em.find(UserEntity.class, userId);
-        QuestionnaireEntity questionnare = em.find(QuestionnaireEntity.class, questionnaireId);
-        QuestionnaireSubmissionEntity questionnaireSubmission = new QuestionnaireSubmissionEntity(user, questionnare);
+        QuestionnaireEntity questionnaire = em.find(QuestionnaireEntity.class, questionnaireId);
+        QuestionnaireSubmissionEntity questionnaireSubmission = new QuestionnaireSubmissionEntity(user, questionnaire);
 
         user.addQuestionnaireSubmission(questionnaireSubmission);
-        questionnare.addQuestionnaireSubmission(questionnaireSubmission);
+        questionnaire.addQuestionnaireSubmission(questionnaireSubmission);
 
         em.persist(user);
-        em.persist(questionnare);
+        em.persist(questionnaire);
         em.persist(questionnaireSubmission);
 
         em.flush();
