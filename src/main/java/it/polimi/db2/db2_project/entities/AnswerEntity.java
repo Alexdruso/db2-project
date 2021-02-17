@@ -45,6 +45,15 @@ public class AnswerEntity {
     @JoinColumn(name = "QUESTIONNAIRE_SUBMISSION_ID", nullable = false)
     private QuestionnaireSubmissionEntity questionnaireSubmission;
 
+    public AnswerEntity() {
+    }
+
+    public AnswerEntity(String text, QuestionEntity question, QuestionnaireSubmissionEntity questionnaireSubmission) {
+        this.text = text;
+        this.question = question;
+        this.questionnaireSubmission = questionnaireSubmission;
+    }
+
     public void setQuestion(QuestionEntity question) {
         this.question = question;
     }
