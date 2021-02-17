@@ -7,6 +7,16 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@NamedQueries(
+        {
+                @NamedQuery(
+                        name = "User.findByUsername",
+                        query = "SELECT u " +
+                                "FROM UserEntity u " +
+                                "WHERE u.username = :username"
+                )
+        }
+)
 @Table(name = "user", schema = "db2")
 public class UserEntity {
 

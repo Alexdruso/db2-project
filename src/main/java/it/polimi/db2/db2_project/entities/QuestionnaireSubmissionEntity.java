@@ -9,9 +9,10 @@ import java.util.Objects;
 @NamedQueries(
         {
                 @NamedQuery(
-                        name = "Questionnaire.",
-                        query = ""
-
+                        name = "QuestionnaireSubmission.getAllUserAnswer",
+                        query = "SELECT a " +
+                                "FROM QuestionnaireSubmissionEntity s JOIN s.answers a " +
+                                "WHERE s.user.id = :userId AND s.questionnaire.id = :questionnaireId"
                 )
         }
 )

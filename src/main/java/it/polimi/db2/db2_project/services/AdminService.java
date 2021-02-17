@@ -64,27 +64,21 @@ public class AdminService {
     }
 
     public List<UserEntity> getAllSubmitters(long questionnaireId) {
-        QuestionnaireEntity questionnaire = em.find(QuestionnaireEntity.class, questionnaireId);
-        if(questionnaire == null) {
-            throw new IllegalArgumentException(String.format("Questionnaire with ID = %d does not exist!", questionnaireId));
-        }
         return em.createNamedQuery("Questionnaire.findSubmitters", UserEntity.class)
-                .setParameter("id", questionnaire)
+                .setParameter("id", questionnaireId)
                 .getResultList();
     }
 
     public List<UserEntity> getAllCancellations(long questionnaireId) {
-        QuestionnaireEntity questionnaire = em.find(QuestionnaireEntity.class, questionnaireId);
-        if(questionnaire == null) {
-            throw new IllegalArgumentException(String.format("Questionnaire with ID = %d does not exist!", questionnaireId));
-        }
         return em.createNamedQuery("Questionnaire.findCancellation", UserEntity.class)
-                .setParameter("id", questionnaire)
+                .setParameter("id", questionnaireId)
                 .getResultList();
     }
 
     public List<AnswerEntity> getAllAnswersByUser(long userId, long questionnaireId) {
-        //QuestionnaireSubmissionEntity
-        return null; //TODO
+        return em.createNamedQuery("QuestionnaireSubmission.getAllUserAnswer", AnswerEntity.class)
+                .setParameter("userId", userId)
+                .setParameter("questionnaireId", questionnaireId)
+                .getResultList();
     }
 }
