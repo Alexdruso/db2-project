@@ -108,9 +108,16 @@ public class UserEntity {
         return questionnaires;
     }
 
+    public void addQuestionnaire(QuestionnaireEntity questionnaire) {
+        this.questionnaires.add(questionnaire);
+    }
 
     public List<QuestionnaireSubmissionEntity> getQuestionnaireSubmissions() {
         return questionnaireSubmissions;
+    }
+
+    public void addQuestionnaireSubmission(QuestionnaireSubmissionEntity questionnaireSubmission) {
+        this.questionnaireSubmissions.add(questionnaireSubmission);
     }
 
     @Override
