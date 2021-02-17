@@ -1,6 +1,7 @@
 package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +36,15 @@ public class QuestionnaireSubmissionEntity {
     private QuestionnaireEntity questionnaire;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "questionnaireSubmission", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AnswerEntity> answers;
+    private List<AnswerEntity> answers = new ArrayList<>();
+
+    public QuestionnaireSubmissionEntity() {
+    }
+
+    public QuestionnaireSubmissionEntity(UserEntity user, QuestionnaireEntity questionnaire) {
+        this.user = user;
+        this.questionnaire = questionnaire;
+    }
 
     public List<AnswerEntity> getAnswers() {
         return answers;
