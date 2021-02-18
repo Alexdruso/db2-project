@@ -8,16 +8,30 @@ import javax.persistence.PersistenceContext;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This service provides all functionalities related to the submission of a questionnaire.
+ */
 @Stateless
 public class SubmissionService {
 
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * Find the questionnaire for the current date.
+     *
+     * @return an optional containing the questionnaire of the current date
+     */
     public Optional<QuestionnaireEntity> findCurrentQuestionnaire() {
         return findQuestionnaire(new Date());
     }
 
+    /**
+     * Find the questionnaire for the specified date.
+     *
+     * @param date the date of the questionnaire
+     * @return an optional containing the questionnaire of the given date
+     */
     public Optional<QuestionnaireEntity> findQuestionnaire(Date date) {
         return Optional.ofNullable(
                 em.createNamedQuery("Questionnaire.findByDate", QuestionnaireEntity.class)
@@ -26,6 +40,12 @@ public class SubmissionService {
         );
     }
 
+    /**
+     * Find the marketing questions of a questionnaire.
+     *
+     * @param questionnaireId the questionnaire id
+     * @return the list of marketing questions associated to a questionnaire
+     */
     public List<QuestionEntity> findMarketingQuestions(long questionnaireId) {
         return em.createNamedQuery("Question.findByQuestionnaire", QuestionEntity.class)
                 .setParameter("optional", 0)
@@ -33,6 +53,12 @@ public class SubmissionService {
                 .getResultList();
     }
 
+    /**
+     * Find the statistical questions of a questionnaire.
+     *
+     * @param questionnaireId the questionnaire id
+     * @return the list of statistical questions associated to a questionnaire
+     */
     public List<QuestionEntity> findStatisticalQuestions(long questionnaireId) {
         return em.createNamedQuery("Question.findByQuestionnaire", QuestionEntity.class)
                 .setParameter("optional", 1)
@@ -40,6 +66,13 @@ public class SubmissionService {
                 .getResultList();
     }
 
+    /**
+     * Create a questionnaire submission.
+     *
+     * @param userId          the user id
+     * @param questionnaireId the questionnaire id
+     * @return the created questionnaire submission entity
+     */
     public QuestionnaireSubmissionEntity createQuestionnaireSubmission(long userId, long questionnaireId) {
         UserEntity user = em.find(UserEntity.class, userId);
         QuestionnaireEntity questionnaire = em.find(QuestionnaireEntity.class, questionnaireId);
@@ -57,6 +90,13 @@ public class SubmissionService {
         return questionnaireSubmission;
     }
 
+    /**
+     * Find a questionnaire submission by the creator and the questionnaire.
+     *
+     * @param userId          the user id
+     * @param questionnaireId the questionnaire id
+     * @return the questionnaire submission, if present
+     */
     public Optional<QuestionnaireSubmissionEntity> findQuestionnaireSubmission(long userId, long questionnaireId) {
         return Optional.ofNullable(
                 em.createNamedQuery(
@@ -70,8 +110,16 @@ public class SubmissionService {
     }
 
 
+    /**
+     * Insert the answers by a user to a questionnaire into the database.
+     *
+     * @param questionnaireId the questionnaire id
+     * @param userId          the user id
+     * @param answers         the map between the id of the question and the answers
+     */
     public void submitAnswers(long questionnaireId, long userId, Map<Long, String> answers) {
         submitAnswers(
+                //retrieve the questionnaire submission id
                 em.createNamedQuery(
                         "QuestionnaireSubmission.findByUserAndQuestionnaire",
                         QuestionnaireSubmissionEntity.class
@@ -84,6 +132,12 @@ public class SubmissionService {
         );
     }
 
+    /**
+     * Submit answers in a specific questionnaire submission.
+     *
+     * @param questionnaireSubmissionId the questionnaire submission id
+     * @param answers                   the map between the id of the question and the answer
+     */
     public void submitAnswers(long questionnaireSubmissionId, Map<Long, String> answers) {
         QuestionnaireSubmissionEntity questionnaireSubmission = em.find(QuestionnaireSubmissionEntity.class, questionnaireSubmissionId);
 
@@ -105,6 +159,14 @@ public class SubmissionService {
         em.flush();
     }
 
+    /**
+     * Update an answer.
+     *
+     * @param questionId      the question id
+     * @param questionnaireId the questionnaire id
+     * @param userId          the user id
+     * @param answerText      the answer text
+     */
     public void updateAnswer(long questionId, long questionnaireId, long userId, String answerText) {
         this.findQuestionnaireSubmission(userId, questionnaireId).ifPresentOrElse(
                 questionnaireSubmission -> this.updateAnswer(
@@ -124,6 +186,13 @@ public class SubmissionService {
 
     }
 
+    /**
+     * Update an answer.
+     *
+     * @param questionId                the question id
+     * @param questionnaireSubmissionId the questionnaire submission id
+     * @param answerText                the answer text
+     */
     public void updateAnswer(long questionId, long questionnaireSubmissionId, String answerText) {
         AnswerEntity answer = em.createNamedQuery("Answer.findAnswerByQuestionAndQuestionnaireSubmission", AnswerEntity.class)
                 .setParameter("questionId", questionId)
@@ -137,6 +206,13 @@ public class SubmissionService {
         em.flush();
     }
 
+    /**
+     * Find answers by a user to a questionnaire.
+     *
+     * @param userId          the user id
+     * @param questionnaireId the questionnaire id
+     * @return the list of answers
+     */
     public List<AnswerEntity> findAnswers(long userId, long questionnaireId) {
         return em.createNamedQuery("Answer.findAnswersByUserAndQuestionnaire", AnswerEntity.class)
                 .setParameter("userId", userId)
