@@ -5,6 +5,7 @@ import it.polimi.db2.db2_project.entities.UserEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.sql.Timestamp;
 import java.util.Optional;
 
 @Stateless
@@ -20,6 +21,10 @@ public class UserService {
         if (user == null || !password.equals(user.getPassword())) {
             return Optional.empty();
         } else {
+            //log user
+            user.setLastLogin(new Timestamp(1));
+            em.persist(user);
+            em.flush();
             return Optional.of(user);
         }
 
@@ -32,6 +37,4 @@ public class UserService {
         }
         user.setBan((byte) 1);
     }
-
-
 }

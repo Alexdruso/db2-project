@@ -25,6 +25,15 @@ import java.util.Objects;
                                 "JOIN UserEntity u " +
                                 "WHERE u.id = :userId " +
                                 "AND q.id = :questionnaireId"
+                ),
+                @NamedQuery(
+                        name = "Answer.findAnswerByQuestionAndQuestionnaireSubmission",
+                        query = "SELECT a " +
+                                "FROM AnswerEntity a " +
+                                "JOIN QuestionnaireSubmissionEntity qs " +
+                                "JOIN QuestionEntity q " +
+                                "WHERE q.id = :questionId " +
+                                "AND qs.id = :questionnaireSubmissionId"
                 )
         }
 )
