@@ -34,7 +34,7 @@ public class QuestionEntity {
             inverseJoinColumns = @JoinColumn(name = "question_id"))
     private List<QuestionnaireEntity> questionnaires;
 
-    @OneToMany(mappedBy = "question_id",
+    @OneToMany(mappedBy = "question",
             cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<AnswerEntity> answers;
 
