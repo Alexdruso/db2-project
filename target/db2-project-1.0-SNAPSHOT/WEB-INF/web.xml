@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-    <servlet>
+    <!--<servlet>
         <servlet-name>helloServlet</servlet-name>
         <servlet-class>it.polimi.db2.db2_project.HelloServlet</servlet-class>
     </servlet>
@@ -18,5 +18,5 @@
         <url-pattern>*.JPG</url-pattern>
         <url-pattern>*.png</url-pattern>
         <url-pattern>*.PNG</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping> -->
 </web-app>

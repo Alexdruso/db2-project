@@ -1,6 +1,7 @@
 package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
@@ -11,8 +12,8 @@ import java.util.Objects;
                         name = "Product.findReviewsByProduct",
                         query = "SELECT a " +
                                 "FROM AnswerEntity a " +
-                                "JOIN QuestionnaireSubmissionEntity " +
-                                "JOIN QuestionnaireEntity " +
+                                "JOIN QuestionnaireSubmissionEntity qs " +
+                                "JOIN QuestionnaireEntity q " +
                                 "JOIN ProductEntity p " +
                                 "WHERE p.id = :productId"
                 ),
@@ -37,7 +38,7 @@ import java.util.Objects;
                 )
         }
 )
-public class AnswerEntity {
+public class AnswerEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

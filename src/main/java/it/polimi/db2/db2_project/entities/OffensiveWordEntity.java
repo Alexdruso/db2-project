@@ -1,12 +1,13 @@
 package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "offensive_word", schema = "db2")
 @NamedQuery(name = "OffensiveWord.findAll", query = "SELECT w FROM OffensiveWordEntity w")
-public class OffensiveWordEntity {
+public class OffensiveWordEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "word", nullable = false)

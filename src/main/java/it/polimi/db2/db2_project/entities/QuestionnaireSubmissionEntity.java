@@ -1,6 +1,7 @@
 package it.polimi.db2.db2_project.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +35,7 @@ import java.util.Objects;
         }
 )
 @Table(name = "questionnaire_submission", schema = "db2")
-public class QuestionnaireSubmissionEntity {
+public class QuestionnaireSubmissionEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
