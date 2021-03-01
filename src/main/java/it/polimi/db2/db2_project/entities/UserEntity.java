@@ -3,6 +3,7 @@ package it.polimi.db2.db2_project.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -38,9 +39,21 @@ public class UserEntity implements Serializable {
 
     //relationships definition part
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<QuestionnaireEntity> questionnaires;
+    private List<QuestionnaireEntity> questionnaires = new ArrayList<>();
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<QuestionnaireSubmissionEntity> questionnaireSubmissions;
+    private List<QuestionnaireSubmissionEntity> questionnaireSubmissions = new ArrayList<>();
+
+    public UserEntity() {
+    }
+
+    public UserEntity(String username, String password, String email, Date lastLogin, byte ban, Byte admin) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.lastLogin = lastLogin;
+        this.ban = ban;
+        this.admin = admin;
+    }
 
     public Long getId() {
         return id;
