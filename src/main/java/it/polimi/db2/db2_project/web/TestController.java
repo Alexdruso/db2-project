@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 
-@WebServlet(name = "LoginController", value = "/")
+@WebServlet(name = "TestController", value = "/test")
 public class TestController extends TemplatingServlet {
 
     public TestController() {
-        super("Templates/Login/test.html",  TemplateMode.HTML, "", ".html");
+        super("test",  TemplateMode.HTML, "WEB-INF/templates/", ".html");
 
     }
 

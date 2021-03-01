@@ -21,12 +21,9 @@ public abstract class TemplatingServlet extends HttpServlet {
     private String pathPrefix;
     private String pathSuffix;
 
-    public TemplatingServlet() {
-
-    }
 
     public TemplatingServlet(String templatePath, TemplateMode templateMode, String pathPrefix, String pathSuffix) {
-
+        System.out.println("Ho chiamato il costruttore!");
         this.templateEngine = new TemplateEngine();
         this.templatePath = templatePath;
         this.templateMode = templateMode;
@@ -40,6 +37,7 @@ public abstract class TemplatingServlet extends HttpServlet {
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
         templateResolver.setTemplateMode(templateMode);
         templateResolver.setSuffix(pathSuffix);
+        templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setPrefix(pathPrefix);
     }
 
@@ -51,7 +49,7 @@ public abstract class TemplatingServlet extends HttpServlet {
     protected void processTemplate(HttpServletRequest request,
                                          HttpServletResponse response,
                                          Map<String, Object> variables) throws IOException {
-
+        System.out.println(System.getProperty("user.dir"));
         ServletContext servletCtx = getServletContext();
         final WebContext webCtx = new WebContext(request, response, servletCtx, request.getLocale());
         if(variables != null) {
