@@ -1,6 +1,6 @@
 create table questionnaire
 (
-	id int not null,
+	id int auto_increment,
 	date date not null,
 	user_id int null,
 	product_id int not null,
@@ -13,7 +13,7 @@ create table questionnaire
 			on update cascade on delete cascade,
 	constraint questionnaire_user_id_fk
 		foreign key (user_id) references user (id)
-			on update cascade on delete set null
+			on update cascade on delete cascade
 );
 
 alter table questionnaire

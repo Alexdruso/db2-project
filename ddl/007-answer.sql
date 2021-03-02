@@ -1,6 +1,6 @@
 create table answer
 (
-	id int not null,
+	id int auto_increment,
 	text text not null,
 	questionnaire_submission_id int null,
 	question_id int null,
