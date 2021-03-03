@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leaderboard of the day</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th> Username</th>
+        <th> Points</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${#lists.isEmpty(leaderboard)}">
+        <td colspan="2"> No one answered yet</td>
+    </tr>
+    <tr th:each="user : ${leaderboard}">
+        <td><span th:text="${user[0]}"> Username </span></td>
+        <td><span th:text="${user[1]}"> Points </span></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
