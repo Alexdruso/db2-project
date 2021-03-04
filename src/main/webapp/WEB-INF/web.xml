@@ -16,6 +16,10 @@
         <servlet-name>TestController</servlet-name>
         <url-pattern>/test</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LeaderboardController</servlet-name>
+        <url-pattern>/leaderboard</url-pattern>
+    </servlet-mapping>
     <!--<servlet>
         <servlet-name>helloServlet</servlet-name>
         <servlet-class>it.polimi.db2.db2_project.HelloServlet</servlet-class>
