@@ -5,6 +5,7 @@ import it.polimi.db2.db2_project.entities.*;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TemporalType;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class SubmissionService {
     public Optional<QuestionnaireEntity> findQuestionnaire(Date date) {
         return Optional.ofNullable(
                 em.createNamedQuery("Questionnaire.findByDate", QuestionnaireEntity.class)
-                        .setParameter("date", date)
+                        .setParameter("date", date, TemporalType.DATE)
                         .getSingleResult()
         );
     }
