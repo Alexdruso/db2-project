@@ -1,7 +1,6 @@
 package it.polimi.db2.db2_project.web.controllers;
 
-import it.polimi.db2.db2_project.entities.QuestionEntity;
-import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
+import it.polimi.db2.db2_project.entities.*;
 import it.polimi.db2.db2_project.services.SubmissionService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -12,6 +11,9 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @WebServlet(name = "StatisticalQuestionsController", value = "/StatisticalQuestionsController")
 public class StatisticalQuestionsController extends TemplatingServlet {
@@ -37,23 +39,97 @@ public class StatisticalQuestionsController extends TemplatingServlet {
                             true
                     );
                 },
-                () -> {
-                    context.put(
-                            "available",
-                            false
-                    );
-                }
+                () -> context.put(
+                        "available",
+                        false
+                )
         );
         super.processTemplate(request, response, context);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("POST invoked");
+
+        //check user logged in
+        HttpSession session = request.getSession();
+        UserEntity user = (UserEntity) session.getAttribute("user");
+
+        if (session.isNew() || user == null) {
+            String path = getServletContext().getContextPath() + "/";
+            response.sendRedirect(path);
+            return;
+        }
+
+
+        Optional<QuestionnaireEntity> questionnaire = submissionService.findCurrentQuestionnaire();
+
+        if(questionnaire.isEmpty()){
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "There is no questionnaire today");
+            return;
+        }
+
+        Optional<QuestionnaireSubmissionEntity> questionnaireSubmission = submissionService.findQuestionnaireSubmission(
+                user.getId(),
+                questionnaire.get().getId()
+        );
+
+        if(questionnaireSubmission.isEmpty()){
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have yet to answer the marketing questions");
+            return;
+        }
+
+        //check already answered to marketing questions
+
+        if(
+                submissionService
+                        .findAnswers(
+                                user.getId(),
+                                questionnaire
+                                        .get()
+                                        .getId()
+                        )
+                        .stream()
+                        .anyMatch(
+                                answer ->
+                                        !answer.getQuestion().getOptional()
+                        )
+        ){
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have yet to answer the marketing questions");
+            return;
+        }
+
+        //check did not answer to any statistical questions
+
+        if(
+                submissionService
+                .findAnswers(
+                        user.getId(),
+                        questionnaire
+                                .get()
+                                .getId()
+                )
+                .stream()
+                .anyMatch(
+                        answer -> answer.getQuestion().getOptional()
+                )
+        ){
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have already answered to the questionnaire");
+            return;
+        }
+
+        //insert statistical questions
+
+        Map<Long, String> answers = new HashMap<>();
+
+        for(QuestionEntity question : submissionService.findStatisticalQuestions(questionnaire.get().getId())){
+            String answer = request.getParameter(question.getId().toString());
+
+            if(answer!=null && !answer.isEmpty()) answers.put(question.getId(), answer);
+        }
+
+        submissionService.submitAnswers(questionnaireSubmission.get().getId(), answers);
 
         String path = getServletContext().getContextPath() + "/congratulations";
-
-        System.out.println(path);
         response.sendRedirect(path);
     }
 }
