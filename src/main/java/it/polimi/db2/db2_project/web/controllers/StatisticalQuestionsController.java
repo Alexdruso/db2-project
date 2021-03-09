@@ -1,6 +1,9 @@
 package it.polimi.db2.db2_project.web.controllers;
 
-import it.polimi.db2.db2_project.entities.*;
+import it.polimi.db2.db2_project.entities.QuestionEntity;
+import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
+import it.polimi.db2.db2_project.entities.QuestionnaireSubmissionEntity;
+import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.SubmissionService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -13,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -80,13 +82,9 @@ public class StatisticalQuestionsController extends TemplatingServlet {
             return;
         }
 
-
-        List<AnswerEntity> persistedAnswers = submissionService.findAnswers(
-                user.getId(),
-                questionnaire.get().getId()
-        );
         //check already answered to marketing questions
-        if(persistedAnswers.isEmpty()){
+
+        if(questionnaireSubmission.get().getAnswers().isEmpty()){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have yet to answer the marketing questions");
             return;
         }
@@ -94,7 +92,7 @@ public class StatisticalQuestionsController extends TemplatingServlet {
         //check did not answer to any statistical questions
 
         if(
-                persistedAnswers
+                questionnaireSubmission.get().getAnswers()
                 .stream()
                 .anyMatch(
                         answer -> answer.getQuestion().getOptional()
