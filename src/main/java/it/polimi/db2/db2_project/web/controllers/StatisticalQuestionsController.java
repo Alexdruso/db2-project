@@ -1,17 +1,21 @@
 package it.polimi.db2.db2_project.web.controllers;
 
-import it.polimi.db2.db2_project.entities.*;
+import it.polimi.db2.db2_project.entities.QuestionEntity;
+import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
+import it.polimi.db2.db2_project.entities.QuestionnaireSubmissionEntity;
+import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.SubmissionService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
 import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.ejb.EJB;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
