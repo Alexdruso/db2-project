@@ -34,11 +34,9 @@ public class SubmissionService {
      * @return an optional containing the questionnaire of the given date
      */
     public Optional<QuestionnaireEntity> findQuestionnaire(Date date) {
-        return Optional.ofNullable(
-                em.createNamedQuery("Questionnaire.findByDate", QuestionnaireEntity.class)
+        return em.createNamedQuery("Questionnaire.findByDate", QuestionnaireEntity.class)
                         .setParameter("date", date, TemporalType.DATE)
-                        .getSingleResult()
-        );
+                        .getResultStream().findFirst();
     }
 
     /**
