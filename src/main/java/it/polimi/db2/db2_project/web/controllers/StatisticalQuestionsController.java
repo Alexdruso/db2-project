@@ -52,6 +52,8 @@ public class StatisticalQuestionsController extends TemplatingServlet {
         System.out.println("POST invoked");
 
         String path = getServletContext().getContextPath() + "/congratulations";
+
+        System.out.println(path);
         response.sendRedirect(path);
     }
 }

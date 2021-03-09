@@ -24,6 +24,10 @@
         <servlet-name>StatisticalQuestionsController</servlet-name>
         <url-pattern>/statistical-questions</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CongratulationsController</servlet-name>
+        <url-pattern>/congratulations</url-pattern>
+    </servlet-mapping>
     <!--<servlet>
         <servlet-name>helloServlet</servlet-name>
         <servlet-class>it.polimi.db2.db2_project.HelloServlet</servlet-class>
