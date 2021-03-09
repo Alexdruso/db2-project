@@ -16,7 +16,7 @@ public class UserService {
     private EntityManager em;
 
     public UserEntity createUser(String username, String password, String email) {
-        UserEntity user = new UserEntity(username, password, email, new Date(), (byte) 0, (byte) 0);
+        UserEntity user = new UserEntity(username, password, email, new Date(), false, false);
 
         em.persist(user);
         em.flush();
@@ -45,6 +45,6 @@ public class UserService {
         if(user == null) {
             throw new IllegalArgumentException(String.format("User with ID = %d does not exist!", userId));
         }
-        user.setBan((byte) 1);
+        user.setBan(true);
     }
 }

@@ -51,7 +51,7 @@ public class AdminService {
         }
         QuestionEntity newQuestion = new QuestionEntity();
         newQuestion.setText(questionText);
-        newQuestion.setOptional((byte) 0);
+        newQuestion.setOptional(false);
         questionnaire.getQuestions().add(newQuestion);
         newQuestion.getQuestionnaires().add(questionnaire);
         em.persist(newQuestion);

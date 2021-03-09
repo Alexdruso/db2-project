@@ -49,7 +49,7 @@ public class SubmissionService {
      */
     public List<QuestionEntity> findMarketingQuestions(long questionnaireId) {
         return em.createNamedQuery("Question.findByQuestionnaire", QuestionEntity.class)
-                .setParameter("optional", 0)
+                .setParameter("optional", false)
                 .setParameter("questionnaireId", questionnaireId)
                 .getResultList();
     }
@@ -62,7 +62,7 @@ public class SubmissionService {
      */
     public List<QuestionEntity> findStatisticalQuestions(long questionnaireId) {
         return em.createNamedQuery("Question.findByQuestionnaire", QuestionEntity.class)
-                .setParameter("optional", 1)
+                .setParameter("optional", true)
                 .setParameter("questionnaireId", questionnaireId)
                 .getResultList();
     }

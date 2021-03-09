@@ -26,7 +26,7 @@ public class QuestionEntity implements Serializable {
     @Column(nullable = false)
     private String text;
     @Column(nullable = false)
-    private byte optional;
+    private Boolean optional;
 
     //relationships definition part
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -64,11 +64,11 @@ public class QuestionEntity implements Serializable {
 
     @Basic
     @Column(name = "optional")
-    public byte getOptional() {
+    public Boolean getOptional() {
         return optional;
     }
 
-    public void setOptional(byte optional) {
+    public void setOptional(Boolean optional) {
         this.optional = optional;
     }
 
@@ -96,7 +96,7 @@ public class QuestionEntity implements Serializable {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (text != null ? text.hashCode() : 0);
-        result = 31 * result + (int) optional;
+        result = 31 * result + (optional != null ? optional.hashCode() : 0);
         return result;
     }
 }

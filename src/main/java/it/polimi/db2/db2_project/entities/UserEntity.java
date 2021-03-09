@@ -34,8 +34,8 @@ public class UserEntity implements Serializable {
     private String email;
     private Date lastLogin;
     @Column(nullable = false)
-    private byte ban;
-    private Byte admin;
+    private Boolean ban;
+    private Boolean admin;
 
     //relationships definition part
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -46,7 +46,7 @@ public class UserEntity implements Serializable {
     public UserEntity() {
     }
 
-    public UserEntity(String username, String password, String email, Date lastLogin, byte ban, Byte admin) {
+    public UserEntity(String username, String password, String email, Date lastLogin, Boolean ban, Boolean admin) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -109,21 +109,21 @@ public class UserEntity implements Serializable {
 
     @Basic
     @Column(name = "ban")
-    public byte getBan() {
+    public Boolean getBan() {
         return ban;
     }
 
-    public void setBan(byte ban) {
+    public void setBan(Boolean ban) {
         this.ban = ban;
     }
 
     @Basic
     @Column(name = "admin")
-    public Byte getAdmin() {
+    public Boolean getAdmin() {
         return admin;
     }
 
-    public void setAdmin(Byte admin) {
+    public void setAdmin(Boolean admin) {
         this.admin = admin;
     }
 
@@ -167,7 +167,7 @@ public class UserEntity implements Serializable {
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (lastLogin != null ? lastLogin.hashCode() : 0);
-        result = 31 * result + (int) ban;
+        result = 31 * result + (ban != null ? ban.hashCode() : 0);
         result = 31 * result + (admin != null ? admin.hashCode() : 0);
         return result;
     }
