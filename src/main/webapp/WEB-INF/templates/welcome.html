@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Home page</title>
 </head>
 <body>
-    <h1> Ciao, "${username}" </h1>
+    <h1> Ciao, <span th:text="${username}"> Username </span> </h1>
     <h2> Prodotto del giorno</h2>
     <h3> Placeholderoni</h3>
 </body>
