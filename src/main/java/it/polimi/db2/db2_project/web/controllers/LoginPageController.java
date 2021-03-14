@@ -15,19 +15,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
 
-@WebServlet(name = "LoginController", value = "/LoginController")
+@WebServlet(name = "LoginPageController", value = "/LoginPageController")
 public class LoginPageController extends TemplatingServlet {
 
     @EJB
     private UserService userService;
 
     public LoginPageController() {
-        super("login.html", TemplateMode.HTML, "WEB-INF/templates/", ".html");
+        super("login", TemplateMode.HTML, "WEB-INF/templates/", ".html");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> ctx = new HashMap<>();
+
+        System.out.println("Invocato");
 
         super.processTemplate(request, response, ctx);
 
