@@ -1,22 +1,54 @@
 package it.polimi.db2.db2_project.web.controllers;
 
+import it.polimi.db2.db2_project.entities.UserEntity;
+import it.polimi.db2.db2_project.services.UserService;
+import it.polimi.db2.db2_project.web.TemplatingServlet;
+import org.thymeleaf.templatemode.TemplateMode;
+
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Optional;
 
 @WebServlet(name = "LoginController", value = "/LoginController")
-public class LoginPageController {
+public class LoginPageController extends TemplatingServlet {
+
+    @EJB
+    private UserService userService;
+
+    public LoginPageController() {
+        super("login.html", TemplateMode.HTML, "WEB-INF/templates/", ".html");
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> ctx = new HashMap<>();
 
-        ctx.put("recipient", getDatabaseName());
-        productService.findCurrentProduct();
         super.processTemplate(request, response, ctx);
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        Optional<UserEntity> result = userService.checkCredentials(username, password);
+        if(result.isPresent()) {
+
+            Cookie loginCookie = new Cookie("user", username);
+            loginCookie.setMaxAge(30*60);
+            response.addCookie(loginCookie);
+            response.sendRedirect("/homepage");
+
+        } else {
+            HashMap<String, Object> ctx = new HashMap<>();
+            response.sendRedirect("/login");
+        }
     }
 
 }
