@@ -21,11 +21,10 @@ public class ProductService {
     }
 
     public Optional<ProductEntity> findByDate(Date date) {
-        return Optional.ofNullable(
-                em.createNamedQuery("Product.findByDate", ProductEntity.class)
+        return em.createNamedQuery("Product.findByDate", ProductEntity.class)
                         .setParameter("date", date)
-                        .getSingleResult()
-        );
+                        .getResultStream().findFirst();
+
     }
 
     public List<AnswerEntity> findProductReviews(ProductEntity product) {

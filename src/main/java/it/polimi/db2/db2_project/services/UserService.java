@@ -25,19 +25,21 @@ public class UserService {
     }
 
     public Optional<UserEntity> checkCredentials(String username, String password) {
-        UserEntity user = em.createNamedQuery("User.findByUsername", UserEntity.class)
+        Optional<UserEntity> maybeUser = em.createNamedQuery("User.findByUsername", UserEntity.class)
                 .setParameter("username", username)
-                .getSingleResult();
-        if (user == null || !password.equals(user.getPassword())) {
+                .getResultStream().findFirst();
+        if(!maybeUser.isPresent()) {
             return Optional.empty();
-        } else {
-            //log user
-            user.setLastLogin(new Timestamp(1));
-            em.persist(user);
-            em.flush();
-            return Optional.of(user);
         }
 
+        UserEntity user = maybeUser.get();
+        if (!password.equals(user.getPassword())) {
+            return Optional.empty();
+        }
+        user.setLastLogin(new Timestamp(1));
+        em.persist(user);
+        em.flush();
+        return Optional.of(user);
     }
 
     public void banUser(long userId) {
