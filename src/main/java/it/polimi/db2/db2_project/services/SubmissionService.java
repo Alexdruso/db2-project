@@ -5,6 +5,7 @@ import it.polimi.db2.db2_project.entities.*;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TemporalType;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,11 +34,9 @@ public class SubmissionService {
      * @return an optional containing the questionnaire of the given date
      */
     public Optional<QuestionnaireEntity> findQuestionnaire(Date date) {
-        return Optional.ofNullable(
-                em.createNamedQuery("Questionnaire.findByDate", QuestionnaireEntity.class)
-                        .setParameter("date", date)
-                        .getSingleResult()
-        );
+        return em.createNamedQuery("Questionnaire.findByDate", QuestionnaireEntity.class)
+                        .setParameter("date", date, TemporalType.DATE)
+                        .getResultStream().findFirst();
     }
 
     /**
@@ -48,7 +47,7 @@ public class SubmissionService {
      */
     public List<QuestionEntity> findMarketingQuestions(long questionnaireId) {
         return em.createNamedQuery("Question.findByQuestionnaire", QuestionEntity.class)
-                .setParameter("optional", 0)
+                .setParameter("optional", false)
                 .setParameter("questionnaireId", questionnaireId)
                 .getResultList();
     }
@@ -61,7 +60,7 @@ public class SubmissionService {
      */
     public List<QuestionEntity> findStatisticalQuestions(long questionnaireId) {
         return em.createNamedQuery("Question.findByQuestionnaire", QuestionEntity.class)
-                .setParameter("optional", 1)
+                .setParameter("optional", true)
                 .setParameter("questionnaireId", questionnaireId)
                 .getResultList();
     }

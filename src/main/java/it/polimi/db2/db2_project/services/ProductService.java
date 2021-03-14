@@ -6,6 +6,7 @@ import it.polimi.db2.db2_project.entities.ProductEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

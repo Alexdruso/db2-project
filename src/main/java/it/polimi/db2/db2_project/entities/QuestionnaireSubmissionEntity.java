@@ -30,7 +30,7 @@ import java.util.Objects;
                                 "FROM QuestionnaireSubmissionEntity qs " +
                                 "JOIN QuestionnaireEntity q " +
                                 "WHERE q.date = :date " +
-                                "ORDER BY qs.user.username"
+                                "ORDER BY qs.points"
                 )
         }
 )
