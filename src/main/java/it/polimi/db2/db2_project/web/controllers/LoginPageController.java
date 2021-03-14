@@ -40,9 +40,8 @@ public class LoginPageController extends TemplatingServlet {
         Optional<UserEntity> result = userService.checkCredentials(username, password);
         if(result.isPresent()) {
 
-            Cookie loginCookie = new Cookie("user", username);
-            loginCookie.setMaxAge(30*60);
-            response.addCookie(loginCookie);
+            request.getSession().setAttribute("user", result.get());
+
             response.sendRedirect(getServletContext().getContextPath() + "/homepage");
 
         } else {
