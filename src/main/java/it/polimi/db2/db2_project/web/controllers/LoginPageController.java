@@ -29,8 +29,6 @@ public class LoginPageController extends TemplatingServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> ctx = new HashMap<>();
 
-        System.out.println("Invocato");
-
         super.processTemplate(request, response, ctx);
 
     }
@@ -45,11 +43,11 @@ public class LoginPageController extends TemplatingServlet {
             Cookie loginCookie = new Cookie("user", username);
             loginCookie.setMaxAge(30*60);
             response.addCookie(loginCookie);
-            response.sendRedirect("/homepage");
+            response.sendRedirect(getServletContext().getContextPath() + "/homepage");
 
         } else {
             HashMap<String, Object> ctx = new HashMap<>();
-            response.sendRedirect("/login");
+            response.sendRedirect(getServletContext().getContextPath() + "/login");
         }
     }
 
