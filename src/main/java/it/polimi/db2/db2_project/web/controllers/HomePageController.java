@@ -16,7 +16,7 @@ import java.util.HashMap;
 public class HomePageController extends TemplatingServlet {
 
     public HomePageController(String templatePath, TemplateMode templateMode, String pathPrefix, String pathSuffix) {
-        super("welcome.html", TemplateMode.HTML, "WEB-INF/templates/", ".html");
+        super("welcome", TemplateMode.HTML, "WEB-INF/templates/", ".html");
 
     }
 
