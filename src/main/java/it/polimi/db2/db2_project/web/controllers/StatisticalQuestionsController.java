@@ -59,7 +59,7 @@ public class StatisticalQuestionsController extends TemplatingServlet {
         UserEntity user = (UserEntity) session.getAttribute("user");
 
         if (session.isNew() || user == null) {
-            String path = getServletContext().getContextPath() + "/";
+            String path = getServletContext().getContextPath() + "/login";
             response.sendRedirect(path);
             return;
         }
