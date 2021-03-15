@@ -114,7 +114,7 @@ public class StatisticalQuestionsController extends TemplatingServlet {
 
         submissionService.submitAnswers(questionnaireSubmission.get().getId(), answers);
 
-        String path = getServletContext().getContextPath() + "/congratulations";
+        String path = getServletContext().getContextPath() + "/homepage";
         response.sendRedirect(path);
     }
 }
