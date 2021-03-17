@@ -20,13 +20,11 @@ public class AdminService {
                 .getSingleResult();
     }
 
-    public QuestionnaireEntity createQuestionnaire(long creatorUserId, long productId, Date date) {
-        QuestionnaireEntity newQ = new QuestionnaireEntity();
-        newQ.setDate(date);
-        UserEntity creatorUser = em.find(UserEntity.class, creatorUserId);
+    public QuestionnaireEntity createQuestionnaire(long userId, long productId, Date date) {
 
-        if(creatorUser == null) {
-            throw new IllegalArgumentException(String.format("User with ID = %d does not exist!", creatorUserId));
+        UserEntity user = em.find(UserEntity.class, userId);
+        if(user == null) {
+            throw new IllegalArgumentException(String.format("User with ID = %d does not exist!", userId));
         }
 
         ProductEntity product = em.find(ProductEntity.class, productId);
@@ -35,25 +33,27 @@ public class AdminService {
             throw new IllegalArgumentException(String.format("Product with ID = %d does not exist!", productId));
         }
 
-        newQ.setProductEntity(product);
         Date today = new Date();
 
         if(!date.after(today)) {
             throw new IllegalArgumentException("Questionnaire date must be set in the future");
         }
 
-        newQ.setDate(date);
-        em.persist(newQ);
+        QuestionnaireEntity questionnaire = new QuestionnaireEntity(date, user, product);
+        em.persist(questionnaire);
+        em.flush();
 
-        return newQ;
+        return questionnaire;
     }
 
     public void deleteQuestionnaire(long questionnaireId)  {
-        QuestionnaireEntity toDelete = em.find(QuestionnaireEntity.class, questionnaireId);
-        if(toDelete == null) {
+        QuestionnaireEntity questionnaire = em.find(QuestionnaireEntity.class, questionnaireId);
+        if(questionnaire == null) {
             throw new IllegalArgumentException(String.format("Questionnaire with ID = %d does not exist!", questionnaireId));
         }
-        em.remove(toDelete);
+        em.remove(questionnaire);
+
+        em.flush();
     }
 
     public QuestionnaireEntity addMarketingQuestion(long questionnaireId, String questionText) {
