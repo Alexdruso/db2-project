@@ -54,12 +54,12 @@ public class QuestionnaireEntity implements Serializable {
     //relationships definition part
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "questionnaire_to_question", schema = "db2",
-            joinColumns = @JoinColumn(name = "question_id"),
-            inverseJoinColumns = @JoinColumn(name = "questionnaire_id"))
+            joinColumns = @JoinColumn(name = "questionnaire_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_id"))
     private List<QuestionEntity> questions = new ArrayList<>();
 
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<QuestionnaireSubmissionEntity> questionnaireSubmissions = new ArrayList<>();
+    private final List<QuestionnaireSubmissionEntity> questionnaireSubmissions = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "USER_ID", nullable = false)

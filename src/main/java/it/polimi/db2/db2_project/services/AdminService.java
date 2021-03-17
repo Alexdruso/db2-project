@@ -72,7 +72,6 @@ public class AdminService {
         newQuestion.setOptional(false);
 
         newQuestion.getQuestionnaires().add(questionnaire);
-        questionnaire.getQuestions().add(newQuestion);
 
         em.persist(newQuestion);
 
