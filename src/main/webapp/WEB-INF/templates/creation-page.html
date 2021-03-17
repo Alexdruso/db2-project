@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Creation Page</title>
+</head>
+<body>
+
+<h1> Admin Creation Page</h1>
+
+<div class="form-group row">
+    <form th:action="@{/creation-page}" method="POST">
+        <h2>Select product</h2>
+
+        <select class="form-control" id="status" name="product">
+            <option th:each="prod : ${products}"
+                    th:value="${prod.getId()}"
+                    th:text="${prod.getName()}">
+            </option>
+        </select>
+
+        <h2>Select Date</h2>
+
+        <div>
+            <input type="date" name="date" th:value="${date}">
+        </div>
+
+        <button type="submit" name="action" value="submit"> Create Questionnaire</button>
+    </form>
+</div>
+
+<p>
+    <a id=center th:href="@{/}">Return to home</a>
+</p>
+
+</body>
+</html>
