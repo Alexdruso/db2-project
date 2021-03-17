@@ -44,6 +44,10 @@
         <servlet-name>CongratulationsController</servlet-name>
         <url-pattern>/congratulations</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CancellationController</servlet-name>
+        <url-pattern>/cancellation</url-pattern>
+    </servlet-mapping>
     <!--<servlet>
         <servlet-name>helloServlet</servlet-name>
         <servlet-class>it.polimi.db2.db2_project.HelloServlet</servlet-class>

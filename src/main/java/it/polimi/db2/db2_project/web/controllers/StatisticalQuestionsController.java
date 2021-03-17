@@ -59,7 +59,7 @@ public class StatisticalQuestionsController extends TemplatingServlet {
         UserEntity user = (UserEntity) session.getAttribute("user");
 
         if (session.isNew() || user == null) {
-            String path = getServletContext().getContextPath() + "/";
+            String path = getServletContext().getContextPath() + "/login";
             response.sendRedirect(path);
             return;
         }
@@ -114,7 +114,7 @@ public class StatisticalQuestionsController extends TemplatingServlet {
 
         submissionService.submitAnswers(questionnaireSubmission.get().getId(), answers);
 
-        String path = getServletContext().getContextPath() + "/congratulations";
+        String path = getServletContext().getContextPath() + "/homepage";
         response.sendRedirect(path);
     }
 }

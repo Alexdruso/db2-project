@@ -272,4 +272,19 @@ public class SubmissionService {
                         offensiveWord -> answer.toLowerCase(Locale.ROOT).contains(offensiveWord.toLowerCase(Locale.ROOT))
                 );
     }
+
+    /**
+     * Cancels all the answers associated to a questionnaire submission, identified by a user and a questionnaire.
+     *
+     * @param userId          the user id
+     * @param questionnaireId the questionnaire id
+     */
+    public void cancelQuestionnaireSubmission(long userId, long questionnaireId){
+        em.createQuery(
+                "DELETE FROM AnswerEntity a " +
+                        "WHERE a.questionnaireSubmission.user.id = :userId " +
+                        "AND a.questionnaireSubmission.questionnaire.id = :questionnaireId"
+        ).setParameter("userId", userId).setParameter("questionnaireId", questionnaireId)
+        .executeUpdate();
+    }
 }
