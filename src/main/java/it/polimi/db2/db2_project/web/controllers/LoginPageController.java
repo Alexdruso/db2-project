@@ -30,7 +30,6 @@ public class LoginPageController extends TemplatingServlet {
         HashMap<String, Object> ctx = new HashMap<>();
 
         super.processTemplate(request, response, ctx);
-
     }
 
     @Override
@@ -38,6 +37,7 @@ public class LoginPageController extends TemplatingServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         Optional<UserEntity> result = userService.checkCredentials(username, password);
+
         if(result.isPresent()) {
 
             request.getSession().setAttribute("user", result.get());
