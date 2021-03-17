@@ -31,6 +31,8 @@ public class AdminService {
 
         QuestionnaireEntity questionnaire = new QuestionnaireEntity(date, user, product);
         em.persist(questionnaire);
+        em.flush();
+
         return questionnaire;
     }
 
