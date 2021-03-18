@@ -7,6 +7,8 @@
 <body>
     <h1> Ciao, <span th:text="${username}"> Username </span> </h1>
     <h2> Prodotto del giorno</h2>
-    <h3> Placeholderoni</h3>
+    <!-- <img class='img-thumbnail' th:src="'data:image/jpeg;base64,' + ${converter.getImgData(product.getImage())}" /> -->
+    <td th:text="${product ? product.getName() : null} ?: 'No product of the day :/'" />
+    SAS
 </body>
 </html>

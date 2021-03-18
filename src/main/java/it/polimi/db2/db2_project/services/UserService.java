@@ -36,7 +36,7 @@ public class UserService {
         if (!password.equals(user.getPassword())) {
             return Optional.empty();
         }
-        user.setLastLogin(new Timestamp(1));
+        user.setLastLogin(new Timestamp(System.currentTimeMillis()));
         em.persist(user);
         em.flush();
         return Optional.of(user);

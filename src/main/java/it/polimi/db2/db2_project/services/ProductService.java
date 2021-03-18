@@ -2,12 +2,13 @@ package it.polimi.db2.db2_project.services;
 
 import it.polimi.db2.db2_project.entities.AnswerEntity;
 import it.polimi.db2.db2_project.entities.ProductEntity;
+import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TemporalType;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,12 +19,13 @@ public class ProductService {
     private EntityManager em;
 
     public Optional<ProductEntity> findCurrentProduct() {
-        return findByDate(new Date());
+        em.createNamedQuery("Questionnaire.findAll", QuestionnaireEntity.class).getResultList().forEach(e -> System.out.println("Date " + e.getDate().toString()));
+        return findByDate(new Date(System.currentTimeMillis()));
     }
 
     public Optional<ProductEntity> findByDate(Date date) {
         return em.createNamedQuery("Product.findByDate", ProductEntity.class)
-                        .setParameter("date", date)
+                        .setParameter("date", date, TemporalType.DATE)
                         .getResultStream().findFirst();
 
     }

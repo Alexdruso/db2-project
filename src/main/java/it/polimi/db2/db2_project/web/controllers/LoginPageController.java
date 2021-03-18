@@ -12,6 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -29,6 +30,7 @@ public class LoginPageController extends TemplatingServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> ctx = new HashMap<>();
 
+
         super.processTemplate(request, response, ctx);
 
     }
@@ -39,13 +41,14 @@ public class LoginPageController extends TemplatingServlet {
         String password = request.getParameter("password");
         Optional<UserEntity> result = userService.checkCredentials(username, password);
         if(result.isPresent()) {
-
-            request.getSession().setAttribute("user", result.get());
-
-            response.sendRedirect(getServletContext().getContextPath() + "/homepage");
-
+            UserEntity user = result.get();
+            request.getSession().setAttribute("user", user);
+            if(user.getAdmin()) {
+                response.sendRedirect(getServletContext().getContextPath() + "/admin");
+            } else {
+                response.sendRedirect(getServletContext().getContextPath() + "/homepage");
+            }
         } else {
-            HashMap<String, Object> ctx = new HashMap<>();
             response.sendRedirect(getServletContext().getContextPath() + "/login");
         }
     }
