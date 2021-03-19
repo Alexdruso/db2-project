@@ -1,7 +1,5 @@
 package it.polimi.db2.db2_project.web.controllers;
 
-import it.polimi.db2.db2_project.entities.ProductEntity;
-import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
 import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.ProductService;
 import it.polimi.db2.db2_project.services.SubmissionService;
@@ -18,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @WebServlet(name = "HomePageController", value = "/HomePageController")
 public class HomePageController extends TemplatingServlet {
@@ -50,11 +47,9 @@ public class HomePageController extends TemplatingServlet {
             return;
         }
         productService.findAllProducts().forEach(productEntity -> System.out.println(submissionService.findCurrentQuestionnaire()));
-        submissionService.findCurrentQuestionnaire().ifPresentOrElse(
-                questionnaire -> {
-                    ProductEntity product = questionnaire.getProductEntity();
+        productService.findCurrentProduct().ifPresentOrElse(
+                product -> {
                     ctx.put("product", product);
-                    System.out.println("Lenght" + new Integer(productService.findProductReviews(product).size()).toString());
                     ctx.put("reviews", productService.findProductReviews(product));
                 },
                 () -> ctx.put("product", null)
