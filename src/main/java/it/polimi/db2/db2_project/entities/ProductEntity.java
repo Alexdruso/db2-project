@@ -13,7 +13,7 @@ import java.util.Objects;
                 @NamedQuery(
                         name = "Product.findByDate",
                         query = "SELECT p " +
-                                "FROM ProductEntity p JOIN QuestionnaireEntity q " +
+                                "FROM ProductEntity p JOIN QuestionnaireEntity q ON p.id = q.product.id " +
                                 "WHERE q.date = :date"
                 ),
                 @NamedQuery(
