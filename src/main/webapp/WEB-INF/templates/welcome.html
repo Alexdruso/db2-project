@@ -7,8 +7,26 @@
 <body>
     <h1> Ciao, <span th:text="${username}"> Username </span> </h1>
     <h2> Prodotto del giorno</h2>
-    <!-- <img class='img-thumbnail' th:src="'data:image/jpeg;base64,' + ${converter.getImgData(product.getImage())}" /> -->
+    <img class='img-thumbnail' th:src="'data:image/jpeg;base64,' + ${converter.getImgData(product.getImage())}" />
     <td th:text="${product ? product.getName() : null} ?: 'No product of the day :/'" />
-    SAS
+    <td th:switch="${#lists.size(reviews)}">
+        <span th:case="'0'">No one answered yet! Be the first to answer!</span>
+        <div th:case="*">
+            <table style="width:50%">
+                <thead>
+                <tr>
+                    <th> Username</th>
+                    <th> Review</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="review : ${reviews}">
+                    <td style="text-align:center"><span th:text="${review.getQuestionnaireSubmission().getUser().getUsername()}"> Username </span></td>
+                    <td style="text-align:center"><span th:text="${review.getText()}"> Points </span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </td>
 </body>
 </html>

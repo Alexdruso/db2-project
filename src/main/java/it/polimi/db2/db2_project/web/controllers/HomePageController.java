@@ -29,6 +29,7 @@ public class HomePageController extends TemplatingServlet {
     @EJB
     private SubmissionService submissionService;
 
+
     public HomePageController() {
         super("welcome", TemplateMode.HTML, "WEB-INF/templates/", ".html");
 
@@ -49,17 +50,14 @@ public class HomePageController extends TemplatingServlet {
             return;
         }
         productService.findAllProducts().forEach(productEntity -> System.out.println(submissionService.findCurrentQuestionnaire()));
-        productService.findCurrentProduct().ifPresentOrElse(
-                product -> {
-                    System.out.println("eeee:" + product.getName());
+        submissionService.findCurrentQuestionnaire().ifPresentOrElse(
+                questionnaire -> {
+                    ProductEntity product = questionnaire.getProductEntity();
                     ctx.put("product", product);
+                    System.out.println("Lenght" + new Integer(productService.findProductReviews(product).size()).toString());
                     ctx.put("reviews", productService.findProductReviews(product));
-
                 },
-                () -> {
-                    System.out.println("sono nullo");
-                    ctx.put("product", null);
-                }
+                () -> ctx.put("product", null)
         );
 
 
