@@ -5,15 +5,14 @@
 </head>
 <body>
 <h1>Login page</h1>
-<p th:if="${loginError}" class="error">Wrong user or password</p>
-<form th:action="@{/login}" method="POST">
+<form th:action="@{/registration}" method="POST">
     <label for="username">Username</label>:
     <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
+    <label for="email">E-Mail</label>:
+    <input type="text" id="email" name="email" autofocus="autofocus" /> <br />
     <label for="password">Password</label>:
     <input type="password" id="password" name="password" /> <br />
-    <input type="submit" value="Log in" />
+    <input type="submit" value="Register" />
 </form>
-
-Don't have an account? <a href="registration">Register now!</a>
 </body>
 </html>

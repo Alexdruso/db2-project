@@ -5,6 +5,7 @@ import it.polimi.db2.db2_project.entities.UserEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolationException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Optional;
@@ -15,13 +16,15 @@ public class UserService {
     @PersistenceContext
     private EntityManager em;
 
-    public UserEntity createUser(String username, String password, String email) {
+    public Optional<UserEntity> createUser(String username, String password, String email) {
         UserEntity user = new UserEntity(username, password, email, new Date(), false, false);
-
-        em.persist(user);
-        em.flush();
-
-        return user;
+        try {
+            em.persist(user);
+            em.flush();
+            return Optional.of(user);
+        } catch (ConstraintViolationException e) {
+            return Optional.empty();
+        }
     }
 
     public Optional<UserEntity> checkCredentials(String username, String password) {
