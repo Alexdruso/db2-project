@@ -30,14 +30,14 @@ import java.util.Objects;
                 ),
                 @NamedQuery(
                         name = "Questionnaire.findSubmitters",
-                        query = "SELECT u " +
-                                "FROM QuestionnaireSubmissionEntity s JOIN s.user u " +
+                        query = "SELECT s.user " +
+                                "FROM QuestionnaireSubmissionEntity s " +
                                 "WHERE s.points > 0 AND s.questionnaire.id = :id  "
                 ),
                 @NamedQuery(
                         name = "Questionnaire.findCancellation",
-                        query = "SELECT u " +
-                                "FROM QuestionnaireSubmissionEntity s JOIN s.user u " +
+                        query = "SELECT s.user " +
+                                "FROM QuestionnaireSubmissionEntity s " +
                                 "WHERE s.points = 0 AND s.questionnaire.id = :id  "
                 )
 
