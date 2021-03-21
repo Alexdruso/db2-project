@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Marketing questions</title>
+</head>
+<body>
+
+<h1>Questionnaire</h1>
+
+<span th:if="${available}">
+    <h2>Answer to all of these question to get points in the leaderboard</h2>
+
+    <form action="marketing-questions" method="POST" >
+        <div th:each="marketingQuestion: ${marketingQuestions}">
+            <label th:text="${marketingQuestion.getText()}"></label>
+            <br><label>
+            <textarea placeholder="Your answer" th:name="${marketingQuestion.getId()}"></textarea>
+        </label>
+        </div>
+
+        <div class="button-container">
+            <a th:href="@{/cancellation}" class="animated-button">Cancel</a>
+            <a th:href="@{/}" class="animated-button">Previous</a>
+            <button type="submit" class="animated-button">Submit</button>
+        </div>
+    </form>
+</span>
+
+
+<span th:unless="${available}">We are sorry, but today no questionnaire is available.</span>
+
+</body>
+</html>

@@ -1,6 +1,7 @@
 package it.polimi.db2.db2_project.web.controllers;
 
 import it.polimi.db2.db2_project.entities.UserEntity;
+import it.polimi.db2.db2_project.services.SubmissionService;
 import it.polimi.db2.db2_project.services.UserService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -20,8 +21,11 @@ public class RegistrationSuccessController extends TemplatingServlet {
     @EJB
     private UserService userService;
 
+    @EJB
+    private SubmissionService submissionService;
+
     public RegistrationSuccessController() {
-        super("registrationSuccess", TemplateMode.HTML, "WEB-INF/templates/", ".html");
+        super("registration-success", TemplateMode.HTML, "WEB-INF/templates/", ".html");
     }
 
     @Override

@@ -26,7 +26,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RegistrationSuccessController</servlet-name>
-        <url-pattern>/registrationSuccess</url-pattern>
+        <url-pattern>/registration-success</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>HomePageController</servlet-name>

@@ -41,10 +41,8 @@ public class RegistrationController extends TemplatingServlet {
         boolean valid = !(username.isBlank() || email.isBlank() || password.isBlank() || username.isEmpty() || password.isEmpty() || email.isEmpty());
         Optional<UserEntity> result = userService.createUser(username, email, password);
         if(result.isPresent() && valid) {
-            System.out.print("Success");
-            response.sendRedirect(getServletContext().getContextPath() + "/registrationSuccess");
+            response.sendRedirect(getServletContext().getContextPath() + "/registration-success");
         } else {
-            System.out.print("Fail");
             response.sendRedirect(getServletContext().getContextPath() + "/registration");
         }
     }

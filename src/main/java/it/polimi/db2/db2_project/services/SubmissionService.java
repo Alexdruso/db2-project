@@ -158,6 +158,17 @@ public class SubmissionService {
         em.flush();
     }
 
+
+
+
+    public void updateAnswers(long questionnaireSubmissionId, Map<Long, String> answers) {
+        answers.forEach(
+                (questionId, answer) -> {
+                    this.updateAnswer(questionId, questionnaireSubmissionId, answer);
+                }
+        );
+    }
+
     /**
      * Update an answer.
      *

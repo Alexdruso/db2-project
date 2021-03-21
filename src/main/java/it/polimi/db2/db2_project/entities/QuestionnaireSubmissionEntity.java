@@ -101,6 +101,10 @@ public class QuestionnaireSubmissionEntity implements Serializable {
         return points;
     }
 
+    public boolean isSubmitted() {
+        return points > 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

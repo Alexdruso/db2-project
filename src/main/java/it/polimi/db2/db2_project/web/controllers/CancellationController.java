@@ -4,6 +4,7 @@ import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
 import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.SubmissionService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
+import it.polimi.db2.db2_project.web.utils.LoginCheckUtil;
 import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.ejb.EJB;
@@ -35,15 +36,10 @@ public class CancellationController extends TemplatingServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //check user logged in
-        HttpSession session = request.getSession();
-        UserEntity user = (UserEntity) session.getAttribute("user");
 
-        if (session.isNew() || user == null) {
-            String path = getServletContext().getContextPath() + "/login";
-            response.sendRedirect(path);
-            return;
-        }
+        Optional<UserEntity> userOpt = LoginCheckUtil.checkLogin(request);
+        if(userOpt.isEmpty()) return;
+        UserEntity user = userOpt.get();
 
         Optional<QuestionnaireEntity> questionnaireOptional = submissionService.findCurrentQuestionnaire();
 

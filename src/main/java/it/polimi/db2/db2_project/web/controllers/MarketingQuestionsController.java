@@ -5,6 +5,7 @@ import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
 import it.polimi.db2.db2_project.entities.QuestionnaireSubmissionEntity;
 import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.SubmissionService;
+import it.polimi.db2.db2_project.services.UserService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
 import it.polimi.db2.db2_project.web.utils.LoginCheckUtil;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -14,30 +15,39 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@WebServlet(name = "StatisticalQuestionsController", value = "/StatisticalQuestionsController")
-public class StatisticalQuestionsController extends TemplatingServlet {
+
+@WebServlet(name = "MarketingQuestionsController", value = "/MarketingQuestionsController")
+public class MarketingQuestionsController extends TemplatingServlet {
 
     @EJB
-    SubmissionService submissionService;
+    private UserService userService;
 
-    public StatisticalQuestionsController() {
-        super("statistical-questions", TemplateMode.HTML, "WEB-INF/templates/", ".html");
+    @EJB
+    private SubmissionService submissionService;
+
+    public MarketingQuestionsController() {
+        super("marketing-questions", TemplateMode.HTML, "WEB-INF/templates/", ".html");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> context = new HashMap<>();
+
+        Optional<UserEntity> userOpt = LoginCheckUtil.checkLogin(request);
+        if(userOpt.isEmpty()) return;
+        UserEntity user = userOpt.get();
+
         submissionService.findCurrentQuestionnaire().ifPresentOrElse(
                 questionnaire -> {
+
+                    submissionService.findQuestionnaireSubmission(user.getId(), questionnaire.getId());
                     context.put(
-                            "statisticalQuestions",
+                            "marketingQuestions",
                             submissionService.findStatisticalQuestions(questionnaire.getId())
                     );
                     context.put(
@@ -51,6 +61,7 @@ public class StatisticalQuestionsController extends TemplatingServlet {
                 )
         );
         super.processTemplate(request, response, context);
+
     }
 
     @Override
@@ -72,14 +83,15 @@ public class StatisticalQuestionsController extends TemplatingServlet {
                 questionnaire.get().getId()
         );
 
-        if(questionnaireSubmission.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have yet to answer the marketing questions");
+
+        if(questionnaireSubmission.isPresent() && questionnaireSubmission.get().getPoints() > 0) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have already answered to this questionnaire");
             return;
         }
 
         //check already answered to marketing questions
 
-        if(questionnaireSubmission.get().getAnswers().isEmpty()){
+        if(questionnaireSubmission.isPresent()){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have yet to answer the marketing questions");
             return;
         }
@@ -88,10 +100,10 @@ public class StatisticalQuestionsController extends TemplatingServlet {
 
         if(
                 questionnaireSubmission.get().getAnswers()
-                .stream()
-                .anyMatch(
-                        answer -> answer.getQuestion().getOptional()
-                )
+                        .stream()
+                        .anyMatch(
+                                answer -> answer.getQuestion().getOptional()
+                        )
         ){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have already answered to the questionnaire");
             return;

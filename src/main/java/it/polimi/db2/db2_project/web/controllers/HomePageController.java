@@ -5,6 +5,7 @@ import it.polimi.db2.db2_project.services.ProductService;
 import it.polimi.db2.db2_project.services.SubmissionService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
 import it.polimi.db2.db2_project.web.utils.ImageUtil;
+import it.polimi.db2.db2_project.web.utils.LoginCheckUtil;
 import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.ejb.EJB;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @WebServlet(name = "HomePageController", value = "/HomePageController")
 public class HomePageController extends TemplatingServlet {
@@ -35,17 +37,13 @@ public class HomePageController extends TemplatingServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        //check user logged in
-        HttpSession session = request.getSession();
-        UserEntity user = (UserEntity) session.getAttribute("user");
+        Optional<UserEntity> userOpt = LoginCheckUtil.checkLogin(request);
+        if(userOpt.isEmpty()) return;
+        UserEntity user = userOpt.get();
+
         final Map<String, Object> ctx = new HashMap<>();
         ctx.put("converter", new ImageUtil());
 
-        if (session.isNew() || user == null) {
-            String path = getServletContext().getContextPath() + "/";
-            response.sendRedirect(path);
-            return;
-        }
         productService.findAllProducts().forEach(productEntity -> System.out.println(submissionService.findCurrentQuestionnaire()));
         productService.findCurrentProduct().ifPresentOrElse(
                 product -> {
