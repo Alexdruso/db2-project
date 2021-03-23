@@ -37,6 +37,10 @@
         <url-pattern>/leaderboard</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>MarketingQuestionsController</servlet-name>
+        <url-pattern>/marketing-questions</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>StatisticalQuestionsController</servlet-name>
         <url-pattern>/statistical-questions</url-pattern>
     </servlet-mapping>

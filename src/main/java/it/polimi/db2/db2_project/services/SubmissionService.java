@@ -97,15 +97,13 @@ public class SubmissionService {
      * @return the questionnaire submission, if present
      */
     public Optional<QuestionnaireSubmissionEntity> findQuestionnaireSubmission(long userId, long questionnaireId) {
-        return Optional.ofNullable(
-                em.createNamedQuery(
+        return em.createNamedQuery(
                         "QuestionnaireSubmission.findByUserAndQuestionnaire",
                         QuestionnaireSubmissionEntity.class
                 )
                         .setParameter("userId", userId)
                         .setParameter("questionnaireId", questionnaireId)
-                        .getSingleResult()
-        );
+                        .getResultStream().findFirst();
     }
 
 

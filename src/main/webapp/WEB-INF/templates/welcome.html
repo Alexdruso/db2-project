@@ -8,7 +8,8 @@
     <h1> Ciao, <span th:text="${username}"> Username </span> </h1>
     <h2> Prodotto del giorno</h2>
     <img class='img-thumbnail' th:src="'data:image/jpeg;base64,' + ${converter.getImgData(product.getImage())}" />
-    <td th:text="${product ? product.getName() : null} ?: 'No product of the day :/'" />
+    <p><td th:text="${product ? product.getName() : null} ?: 'No product of the day :/'" /></p>
+    <p><a href="marketing-questions">Questionnaire</a></p>
     <td th:switch="${#lists.size(reviews)}">
         <span th:case="'0'">No one answered yet! Be the first to answer!</span>
         <div th:case="*">

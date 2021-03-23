@@ -7,7 +7,7 @@ import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.SubmissionService;
 import it.polimi.db2.db2_project.services.UserService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
-import it.polimi.db2.db2_project.web.utils.LoginCheckUtil;
+import it.polimi.db2.db2_project.web.utils.SessionUtil;
 import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.ejb.EJB;
@@ -15,10 +15,13 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.Session;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static it.polimi.db2.db2_project.web.utils.SessionUtil.getAnswers;
 
 
 @WebServlet(name = "MarketingQuestionsController", value = "/MarketingQuestionsController")
@@ -38,18 +41,25 @@ public class MarketingQuestionsController extends TemplatingServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> context = new HashMap<>();
 
-        Optional<UserEntity> userOpt = LoginCheckUtil.checkLogin(request);
+        Optional<UserEntity> userOpt = SessionUtil.checkLogin(request);
         if(userOpt.isEmpty()) return;
         UserEntity user = userOpt.get();
+        if(request.getParameter("missing") != null) {
+            context.put("missing", true);
+        }
+
+        Map<Long, String> answers = SessionUtil.getAnswers(request);
+
 
         submissionService.findCurrentQuestionnaire().ifPresentOrElse(
                 questionnaire -> {
-
-                    submissionService.findQuestionnaireSubmission(user.getId(), questionnaire.getId());
                     context.put(
                             "marketingQuestions",
-                            submissionService.findStatisticalQuestions(questionnaire.getId())
+                            submissionService.findMarketingQuestions(questionnaire.getId())
                     );
+                    if(!answers.isEmpty()) {
+                        context.put("marketingAnswers", answers);
+                    }
                     context.put(
                             "available",
                             true
@@ -67,7 +77,7 @@ public class MarketingQuestionsController extends TemplatingServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        Optional<UserEntity> userOpt = LoginCheckUtil.checkLogin(request);
+        Optional<UserEntity> userOpt = SessionUtil.checkLogin(request);
         if(userOpt.isEmpty()) return;
         UserEntity user = userOpt.get();
 
@@ -89,39 +99,28 @@ public class MarketingQuestionsController extends TemplatingServlet {
             return;
         }
 
-        //check already answered to marketing questions
-
-        if(questionnaireSubmission.isPresent()){
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have yet to answer the marketing questions");
-            return;
-        }
-
-        //check did not answer to any statistical questions
-
-        if(
-                questionnaireSubmission.get().getAnswers()
-                        .stream()
-                        .anyMatch(
-                                answer -> answer.getQuestion().getOptional()
-                        )
-        ){
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have already answered to the questionnaire");
-            return;
-        }
-
         //insert statistical questions
 
         Map<Long, String> answers = new HashMap<>();
-
-        for(QuestionEntity question : submissionService.findStatisticalQuestions(questionnaire.get().getId())){
+        boolean missing = false;
+        for(QuestionEntity question : submissionService.findMarketingQuestions(questionnaire.get().getId())){
             String answer = request.getParameter(question.getId().toString());
 
-            if(answer!=null && !answer.isEmpty()) answers.put(question.getId(), answer);
+            if(answer != null && !answer.isEmpty()) {
+                answers.put(question.getId(), answer);
+            } else {
+                missing = true;
+            }
+        }
+        SessionUtil.putAnswers(request, answers);
+        if(missing) {
+            String path = getServletContext().getContextPath() + "/marketing-questions?missing";
+            response.sendRedirect(path);
+            return;
         }
 
-        submissionService.submitAnswers(questionnaireSubmission.get().getId(), answers);
 
-        String path = getServletContext().getContextPath() + "/homepage";
+        String path = getServletContext().getContextPath() + "/statistical-questions";
         response.sendRedirect(path);
     }
 }

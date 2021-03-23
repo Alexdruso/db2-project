@@ -29,10 +29,10 @@ public class LoginPageController extends TemplatingServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> ctx = new HashMap<>();
-
-
+        if(request.getParameter("login_failed") != null) {
+            ctx.put("login_error", true);
+        }
         super.processTemplate(request, response, ctx);
-
     }
 
     @Override
@@ -49,7 +49,7 @@ public class LoginPageController extends TemplatingServlet {
                 response.sendRedirect(getServletContext().getContextPath() + "/homepage");
             }
         } else {
-            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            response.sendRedirect(getServletContext().getContextPath() + "/login?login_failed=true");
         }
     }
 

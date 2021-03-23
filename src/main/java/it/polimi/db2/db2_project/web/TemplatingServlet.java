@@ -23,7 +23,6 @@ public abstract class TemplatingServlet extends HttpServlet {
 
 
     public TemplatingServlet(String templatePath, TemplateMode templateMode, String pathPrefix, String pathSuffix) {
-        System.out.println("Ho chiamato il costruttore!");
         this.templateEngine = new TemplateEngine();
         this.templatePath = templatePath;
         this.templateMode = templateMode;
