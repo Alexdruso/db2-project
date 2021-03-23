@@ -15,9 +15,9 @@ public class AdminService {
     private EntityManager em;
 
     public QuestionnaireEntity getQuestionnaire(long questionnaireId) {
-        return em.createNamedQuery("Questionnaire.findById", QuestionnaireEntity.class)
-                .setParameter("id", questionnaireId)
-                .getSingleResult();
+        QuestionnaireEntity questionnaire = em.find(QuestionnaireEntity.class, questionnaireId);
+        em.refresh(questionnaire);
+        return questionnaire;
     }
 
     public QuestionnaireEntity createQuestionnaire(long userId, long productId, Date date) {
