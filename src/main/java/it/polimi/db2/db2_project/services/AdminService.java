@@ -20,22 +20,48 @@ public class AdminService {
                 .getSingleResult();
     }
 
-    public QuestionnaireEntity createQuestionnaire(long userId, long productId, Date date) {
+    public QuestionEntity updateQuestion(long questionId, String newText) {
+        QuestionEntity question = em.find(QuestionEntity.class, questionId);
 
+        if (question == null) {
+            throw new IllegalArgumentException(String.format("Question with ID = %d does not exist!", questionId));
+        }
+
+        question.setText(newText);
+
+        em.persist(question);
+        em.flush();
+
+        return question;
+    }
+
+    public void removeQuestion(long questionId) {
+        QuestionEntity question = em.find(QuestionEntity.class, questionId);
+
+        if (question == null) {
+            throw new IllegalArgumentException(String.format("Question with ID = %d does not exist!", questionId));
+        }
+
+        em.remove(question);
+        em.flush();
+    }
+
+    public QuestionnaireEntity createQuestionnaire(long userId, long productId, Date date) {
         UserEntity user = em.find(UserEntity.class, userId);
-        if(user == null) {
+
+        if (user == null) {
             throw new IllegalArgumentException(String.format("User with ID = %d does not exist!", userId));
         }
 
         ProductEntity product = em.find(ProductEntity.class, productId);
 
-        if(product == null) {
+        if (product == null) {
             throw new IllegalArgumentException(String.format("Product with ID = %d does not exist!", productId));
         }
 
         Date today = new Date();
 
-        if(!date.after(today)) {
+        if (!date.after(today)) {
             throw new IllegalArgumentException("Questionnaire date must be set in the future");
         }
 
@@ -46,24 +72,25 @@ public class AdminService {
         return questionnaire;
     }
 
-    public void deleteQuestionnaire(long questionnaireId)  {
+    public void deleteQuestionnaire(long questionnaireId) {
         QuestionnaireEntity questionnaire = em.find(QuestionnaireEntity.class, questionnaireId);
-        if(questionnaire == null) {
+
+        if (questionnaire == null) {
             throw new IllegalArgumentException(String.format("Questionnaire with ID = %d does not exist!", questionnaireId));
         }
-        em.remove(questionnaire);
 
+        em.remove(questionnaire);
         em.flush();
     }
 
     public QuestionnaireEntity addMarketingQuestion(long questionnaireId, String questionText) {
         QuestionnaireEntity questionnaire = em.find(QuestionnaireEntity.class, questionnaireId);
 
-        if(questionnaire == null) {
+        if (questionnaire == null) {
             throw new IllegalArgumentException(String.format("Questionnaire with ID = %d does not exist!", questionnaireId));
         }
 
-        if(questionText.equals("")) {
+        if (questionText.equals("")) {
             throw new IllegalArgumentException("Question can't be empty");
         }
 
@@ -73,7 +100,8 @@ public class AdminService {
 
         newQuestion.getQuestionnaires().add(questionnaire);
 
-        em.persist(newQuestion);
+        em.persist(questionnaire);
+        em.flush();
 
         return questionnaire;
     }

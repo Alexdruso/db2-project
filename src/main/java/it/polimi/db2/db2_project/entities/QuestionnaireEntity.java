@@ -59,7 +59,7 @@ public class QuestionnaireEntity implements Serializable {
     private List<QuestionEntity> questions = new ArrayList<>();
 
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<QuestionnaireSubmissionEntity> questionnaireSubmissions = new ArrayList<>();
+    private List<QuestionnaireSubmissionEntity> questionnaireSubmissions = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "USER_ID", nullable = false)
