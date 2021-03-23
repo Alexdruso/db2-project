@@ -34,7 +34,7 @@ public class QuestionEntity implements Serializable {
     @JoinTable(name = "questionnaire_to_question", schema = "db2",
             joinColumns = @JoinColumn(name = "question_id"),
             inverseJoinColumns = @JoinColumn(name = "questionnaire_id"))
-    private final List<QuestionnaireEntity> questionnaires = new ArrayList<>();
+    private List<QuestionnaireEntity> questionnaires = new ArrayList<>();
 
     @OneToMany(mappedBy = "question",
             cascade = CascadeType.REMOVE, orphanRemoval = true)
