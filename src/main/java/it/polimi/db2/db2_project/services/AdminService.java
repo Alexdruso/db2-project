@@ -75,6 +75,8 @@ public class AdminService {
 
         em.persist(newQuestion);
 
+        em.flush();
+
         return questionnaire;
     }
 
