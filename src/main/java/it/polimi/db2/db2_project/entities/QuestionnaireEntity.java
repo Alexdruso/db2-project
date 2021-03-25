@@ -12,12 +12,6 @@ import java.util.Objects;
 @NamedQueries(
         {
                 @NamedQuery(
-                        name = "Questionnaire.findById",
-                        query = "SELECT q " +
-                                "FROM QuestionnaireEntity q " +
-                                "WHERE q.id = :id"
-                ),
-                @NamedQuery(
                         name = "Questionnaire.findByDate",
                         query = "SELECT q " +
                                 "FROM QuestionnaireEntity q " +
