@@ -12,19 +12,22 @@
     <h3> <a th:text="${questionnaire.getProductEntity().getName()}"></a> </h3>
 
     <h4> Mandatory Questions </h4>
+    <h5> To remove a question, simply erase its content and click on 'update questions' </h5>
 
-    <form th:action="@{/edit-questionnaire?id=__${questionnaire.getId()}__}" th:object="${questionnaire.getQuestions()}" method="POST">
+    <form th:action="@{/edit-questionnaire?id=__${questionnaire.getId()}__}" th:object="${questionnaire.getQuestions()}"
+          method="POST">
         <div th:each="question, i: ${questionnaire.getQuestions()}">
             <p>
                 <input type="text" size="75" th:name="${question.getId()}" th:value="${question.getText()}"/>
             </p>
         </div>
-        <!--        <tr th:each="question : ${questionnaire.getQuestions()}">-->
-        <!--            <input type="text" th:value="${question.getText()}"><br>-->
-        <!--        </tr>-->
 
-        <button type="submit" name="update"> Update questions </button>
-        <button type="submit" name="add"> Add new question </button>
+        <p>
+            <button type="submit" name="update"> Update questions </button>
+        </p>
+        <p>
+            <button type="submit" name="add"> Add new question </button>
+        </p>
     </form>
 
 </span>
