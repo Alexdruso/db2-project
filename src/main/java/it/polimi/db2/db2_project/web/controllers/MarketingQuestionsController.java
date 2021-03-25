@@ -15,13 +15,10 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.Session;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import static it.polimi.db2.db2_project.web.utils.SessionUtil.getAnswers;
 
 
 @WebServlet(name = "MarketingQuestionsController", value = "/MarketingQuestionsController")
@@ -78,12 +75,23 @@ public class MarketingQuestionsController extends TemplatingServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Optional<UserEntity> userOpt = SessionUtil.checkLogin(request);
-        if(userOpt.isEmpty()) return;
+
+        if (userOpt.isEmpty()) {
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
+            return;
+        }
+
         UserEntity user = userOpt.get();
+
+        if (user.getBan()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have been banned.");
+            return;
+        }
 
         Optional<QuestionnaireEntity> questionnaire = submissionService.findCurrentQuestionnaire();
 
-        if(questionnaire.isEmpty()) {
+        if (questionnaire.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "There is no questionnaire today");
             return;
         }
@@ -112,12 +120,14 @@ public class MarketingQuestionsController extends TemplatingServlet {
                 missing = true;
             }
         }
-        SessionUtil.putAnswers(request, answers);
-        if(missing) {
+
+        if (missing) {
             String path = getServletContext().getContextPath() + "/marketing-questions?missing";
             response.sendRedirect(path);
             return;
         }
+
+        SessionUtil.putAnswers(request, answers);
 
 
         String path = getServletContext().getContextPath() + "/statistical-questions";
