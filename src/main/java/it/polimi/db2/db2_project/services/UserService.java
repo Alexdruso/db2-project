@@ -16,8 +16,16 @@ public class UserService {
     @PersistenceContext
     private EntityManager em;
 
+    public Optional<UserEntity> findUser(long userId) {
+        UserEntity user = em.find(UserEntity.class, userId);
+
+        return Optional.ofNullable(user);
+    }
+
+
     public Optional<UserEntity> createUser(String username, String password, String email) {
         UserEntity user = new UserEntity(username, password, email, new Date(), false, false);
+
         try {
             em.persist(user);
             em.flush();
@@ -28,29 +36,34 @@ public class UserService {
     }
 
     public Optional<UserEntity> checkCredentials(String username, String password) {
-        Optional<UserEntity> maybeUser = em.createNamedQuery("User.findByUsername", UserEntity.class)
+        Optional<UserEntity> user = em.createNamedQuery("User.findByUsername", UserEntity.class)
                 .setParameter("username", username)
                 .getResultStream().findFirst();
-        if(!maybeUser.isPresent()) {
+
+        if (user.isEmpty()) {
             return Optional.empty();
         }
 
-        UserEntity user = maybeUser.get();
-        if (!password.equals(user.getPassword())) {
+        if (!password.equals(user.get().getPassword())) {
             return Optional.empty();
         }
-        user.setLastLogin(new Timestamp(System.currentTimeMillis()));
-        em.persist(user);
+
+        user.get().setLastLogin(new Timestamp(System.currentTimeMillis()));
+
+        em.persist(user.get());
         em.flush();
-        return Optional.of(user);
+
+        return user;
     }
 
     public void banUser(long userId) {
-        UserEntity user = em.find(UserEntity.class, userId);
-        if (user == null) {
+        Optional<UserEntity> user = findUser(userId);
+
+        if (user.isEmpty()) {
             throw new IllegalArgumentException(String.format("User with ID = %d does not exist!", userId));
         }
-        user.setBan(true);
+
+        user.get().setBan(true);
         em.persist(user);
         em.flush();
     }

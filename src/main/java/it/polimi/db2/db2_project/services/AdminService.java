@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 public class AdminService {
@@ -14,10 +15,11 @@ public class AdminService {
     @PersistenceContext
     private EntityManager em;
 
-    public QuestionnaireEntity getQuestionnaire(long questionnaireId) {
+    public Optional<QuestionnaireEntity> getQuestionnaire(long questionnaireId) {
         QuestionnaireEntity questionnaire = em.find(QuestionnaireEntity.class, questionnaireId);
         em.refresh(questionnaire);
-        return questionnaire;
+
+        return Optional.ofNullable(questionnaire);
     }
 
     public QuestionEntity updateQuestion(long questionId, String newText) {
