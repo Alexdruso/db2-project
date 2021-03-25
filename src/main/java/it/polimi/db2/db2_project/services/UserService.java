@@ -47,9 +47,11 @@ public class UserService {
 
     public void banUser(long userId) {
         UserEntity user = em.find(UserEntity.class, userId);
-        if(user == null) {
+        if (user == null) {
             throw new IllegalArgumentException(String.format("User with ID = %d does not exist!", userId));
         }
         user.setBan(true);
+        em.persist(user);
+        em.flush();
     }
 }
