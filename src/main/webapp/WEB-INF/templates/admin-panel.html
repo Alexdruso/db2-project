@@ -1,32 +1,45 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Home page</title>
 </head>
 <body>
-<span th:if="${isAdmin}">
-    <h1> Welcome, <span th:text="${username}"> Username </span> </h1>
+<td th:if="${isAdmin}">
+    <h1> Welcome, <span th:text="${username}"> Username </span></h1>
 
-    <p>
-        <span th:if="${product} != null">
 
-        </span>
+    <a th:if="${questionnaire != null}">
+        <h2> Product of the day: </h2>
+        <h3><span th:text="${questionnaire.getProductEntity().getName()}"></span></h3>
+        <p>
+            <img class="img-thumbnail"
+                 height="200"
+                 th:src="'data:image/jpeg;base64,' + ${converter.getImgData(questionnaire.getProductEntity().getImage())}"
+                 width="200"
+            />
+        </p>
 
-        <span th:unless="${product} != null">
-            <h3> There is no product of the day for the current date. </h3>
-        </span>
-    </p>
+        <p>
+            <a th:href="@{'/inspection-page?selected=' + ${questionnaire.getId()}}"> See responses </a>
+        </p>
+    </a>
 
-    <p> <a th:href="@{/creation-page}"> Go to Creation Page </a> </p>
-    <p> <a th:href="@{/inspection-page}"> Go to Inspection Page </a> </p>
-    <p> <a th:href="@{/deletion-page}"> Go to Deletion Page </a> </p>
+    <a th:unless="${questionnaire != null}">
+        <h3> There is no product of the day for the current date. </h3>
+    </a>
 
-</span>
+    <h2> Manage questionnaires: </h2>
 
-<span th:unless="${isAdmin}">
+    <p><a th:href="@{/creation-page}"> Go to Creation Page </a></p>
+    <p><a th:href="@{/inspection-page}"> Go to Inspection Page </a></p>
+    <p><a th:href="@{/deletion-page}"> Go to Deletion Page </a></p>
+</td>
+
+<td th:unless="${isAdmin}">
     <h1> You don't have permission to view this page. </h1>
-    <p> <a th:href="@{/homepage}"> Return to home </a> </p>
-</span>
+    <p><a th:href="@{/homepage}"> Return to home </a></p>
+</td>
+
 </body>
 </html>

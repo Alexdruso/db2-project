@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Admin Creation Page</title>
@@ -8,33 +8,41 @@
 
 <h1> Admin Creation Page</h1>
 
-<span th:if="${questionnaire != null}">
-    <h3> <a th:text="${questionnaire.getProductEntity().getName()}"></a> </h3>
+<td th:if="${isAdmin}">
+    <a th:if="${questionnaire != null}">
+        <h2>
+            <a th:text="${#dates.format(questionnaire.getDate(), 'dd/MMM/yyyy') + ' - ' + questionnaire.getProductEntity().getName()}"></a>
+        </h2>
 
-    <h4> Mandatory Questions </h4>
-    <h5> To remove a question, simply erase its content and click on 'update questions' </h5>
+        <h3> Mandatory Questions: </h3>
+        <h4> To remove a question, simply erase its content and click on 'update questions' </h4>
 
-    <form th:action="@{/edit-questionnaire?id=__${questionnaire.getId()}__}" th:object="${questionnaire.getQuestions()}"
-          method="POST">
-        <div th:each="question, i: ${questionnaire.getQuestions()}">
+        <form method="POST"
+              th:action="@{/edit-questionnaire?id=__${questionnaire.getId()}__}"
+              th:object="${questionnaire.getQuestions()}">
+            <div th:each="question, i: ${questions}">
+                <p>
+                    <input size="75" th:name="${question.getId()}" th:value="${question.getText()}" type="text"/>
+                </p>
+            </div>
+
             <p>
-                <input type="text" size="75" th:name="${question.getId()}" th:value="${question.getText()}"/>
+                <button name="update" type="submit"> Update questions</button>
             </p>
-        </div>
-
+            <p>
+                <button name="add" type="submit"> Add new question</button>
+            </p>
+        </form>
         <p>
-            <button type="submit" name="update"> Update questions </button>
+            <a id=center th:href="@{/admin-panel}">Return to home</a>
         </p>
-        <p>
-            <button type="submit" name="add"> Add new question </button>
-        </p>
-    </form>
+    </a>
+</td>
 
-</span>
-
-<p>
-    <a id=center th:href="@{/}">Return to home</a>
-</p>
+<td th:unless="${isAdmin}">
+    <h1> You don't have permission to view this page. </h1>
+    <p><a th:href="@{/homepage}"> Return to home </a></p>
+</td>
 
 </body>
 </html>

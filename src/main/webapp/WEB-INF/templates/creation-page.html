@@ -8,34 +8,41 @@
 
 <h1> Admin Creation Page</h1>
 
-<div class="form-group row">
-    <form method="POST" th:action="@{/creation-page}">
-        <h2>Select product</h2>
+<td th:if="${isAdmin}">
+    <div class="form-group row">
+        <form method="POST" th:action="@{/creation-page}">
+            <h2>Select product</h2>
 
-        <p>
-            <select class="form-control" id="status" name="product">
-                <option th:each="prod : ${products}"
-                        th:text="${prod.getName()}"
-                        th:value="${prod.getId()}">
-                </option>
-            </select>
-        </p>
+            <p>
+                <select class="form-control" id="status" name="product">
+                    <option th:each="prod : ${products}"
+                            th:text="${prod.getName()}"
+                            th:value="${prod.getId()}">
+                    </option>
+                </select>
+            </p>
 
-        <h2>Select Date</h2>
+            <h2>Select Date</h2>
 
-        <p>
-        <div>
-            <input name="date" th:value="${date}" type="date">
-        </div>
-        </p>
+            <p>
+            <div>
+                <input name="date" th:value="${date}" type="date">
+            </div>
+            </p>
 
-        <button name="create" type="submit" value="submit"> Create Questionnaire</button>
-    </form>
-</div>
+            <button name="create" type="submit" value="submit"> Create Questionnaire</button>
+        </form>
+    </div>
 
-<p>
-    <a id=center th:href="@{/}">Return to home</a>
-</p>
+    <p>
+        <a id=center th:href="@{/admin-panel}">Return to home</a>
+    </p>
+</td>
+
+<td th:unless="${isAdmin}">
+    <h1> You don't have permission to view this page. </h1>
+    <p><a th:href="@{/homepage}"> Return to home </a></p>
+</td>
 
 </body>
 </html>

@@ -8,71 +8,64 @@
 
 <h1> Admin Inspection Page</h1>
 
-<span th:if="${user != null}">
-<h3><a th:text="'Viewing responses of: ' + ${user.getUsername()}"></a></h3>
+<td th:if="${questionnaire != null && user != null}">
+    <h2><a th:text="'Viewing responses of: ' + ${user.getUsername()}"></a></h2>
     <div th:each="ans, i: ${answers}">
-        <h2>
-            <a th:text="${ans.}"
-        </h2>
+        <h3><a th:text="${'Question: ' + ans.getQuestion().getText()}"></a></h3>
+        <p th:text="${ans.getText()}"></p>
     </div>
-</span>
+</td>
 
-<span th:if="${selected != null && user == null}">
-    <h2>
+<td th:if="${questionnaire != null && user == null}">
+    <h2> Selected Questionnaire: </h2>
+    <h3>
         <a th:text="${
-            'Selected Questionnaire: ' +
-            #dates.format(selected.getDate(), 'dd/MMM/yyyy')
+            #dates.format(questionnaire.getDate(), 'dd/MMM/yyyy')
             + '  -  ' +
-            selected.getProductEntity().getName()
+            questionnaire.getProductEntity().getName()
         }"></a>
-    </h2>
+    </h3>
 
-    <h3> Submitted Questionnaires </h3>
-    <div th:each="sub, i: ${submissions}">
-        <p>
-        <h2>
-            <form method="POST"
-                  th:action="@{/inspection-page?selected=__${selected.getId()}__&user=__${sub.getId()}__}">
-                <button th:text="${sub.getUsername()}" type="submit">
+    <h4> Submitted Questionnaires: </h4>
+    <a th:each="sub, i: ${submissions}">
+        <form method="POST"
+              th:action="@{/inspection-page?questionnaire=__${questionnaire.getId()}__&user=__${sub.getId()}__}">
+            <button th:text="${sub.getUsername()}" type="submit">
             </button>
-            </form>
-        </h2>
-        </p>
-    </div>
-    <h3> Cancelled Questionnaires </h3>
-    <div th:each="canc, i: ${cancellations}">
-        <p>
-        <h2>
-            <form method="POST"
-                  th:action="@{/inspection-page?selected=__${selected.getId()}__&user=__${canc.getId()}__}">
-                <button th:text="${canc.getUsername()}" type="submit">
+        </form>
+    </a>
+    <h4> Cancelled Questionnaires: </h4>
+    <a th:each="canc, i: ${cancellations}">
+        <form method="POST"
+              th:action="@{/inspection-page?questionnaire=__${questionnaire.getId()}__&user=__${canc.getId()}__}">
+            <button th:text="${canc.getUsername()}" type="submit">
             </button>
-            </form>
-        </h2>
-    </p>
-    </div>
-</span>
-<span th:unless="${selected != null && user == null}">
+        </form>
+    </a>
+</td>
+
+<td th:unless="${questionnaire != null}">
     <h3> Select a questionnaire to view the responses</h3>
 
-    <div th:each="questionnaire, i: ${questionnaires}">
-        <p>
-        <h3>
-            <form method="POST" th:action="@{/inspection-page?selected=__${questionnaire.getId()}__}">
-                <button th:text=
-                                "${#dates.format(questionnaire.getDate(), 'dd/MMM/yyyy')
+    <a th:each="questionnaire, i: ${questionnaires}">
+        <form method="POST" th:action="@{/inspection-page?questionnaire=__${questionnaire.getId()}__}">
+            <h3>
+                <button th:text="${#dates.format(questionnaire.getDate(), 'dd/MMM/yyyy')
                                 + '  -  ' +
                                 questionnaire.getProductEntity().getName()}"
                         type="submit">
-            </button>
-            </form>
-        </h3>
-        </p>
-    </div>
-</span>
+                </button>
+
+                <a th:href="@{'/edit-questionnaire?id=' + ${questionnaire.getId()}}"
+                   th:if="${questionnaire.getDate().after(today)}"> Edit questionnaire </a>
+            </h3>
+
+        </form>
+    </a>
+</td>
 
 <p>
-    <a id=center th:href="@{/}">Return to home</a>
+    <a id=center th:href="@{/admin-panel}">Return to home</a>
 </p>
 
 </body>
