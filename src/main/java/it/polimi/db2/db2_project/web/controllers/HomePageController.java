@@ -37,8 +37,19 @@ public class HomePageController extends TemplatingServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Optional<UserEntity> userOpt = SessionUtil.checkLogin(request);
-        if(userOpt.isEmpty()) return;
+
+        if (userOpt.isEmpty()) {
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
+            return;
+        }
+
         UserEntity user = userOpt.get();
+
+        if (user.getBan()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have been banned.");
+            return;
+        }
 
         final Map<String, Object> ctx = new HashMap<>();
         ctx.put("converter", new ImageUtil());
