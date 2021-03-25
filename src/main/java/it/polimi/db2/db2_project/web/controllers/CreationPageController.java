@@ -1,11 +1,8 @@
 package it.polimi.db2.db2_project.web.controllers;
 
-import it.polimi.db2.db2_project.entities.ProductEntity;
-import it.polimi.db2.db2_project.entities.QuestionEntity;
 import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
 import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.AdminService;
-import it.polimi.db2.db2_project.services.LeaderboardService;
 import it.polimi.db2.db2_project.services.ProductService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -19,10 +16,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Optional;
 
 @WebServlet(name = "CreationPageController", value = "/CreationPageController")
 public class CreationPageController extends TemplatingServlet {
@@ -74,7 +69,8 @@ public class CreationPageController extends TemplatingServlet {
 
         QuestionnaireEntity newQuestionnaire = adminService.createQuestionnaire(userId, productId, questionnaireDate);
 
-        String redirect = String.format("/edit-questionnaire?id=%d", newQuestionnaire.getId());
+        String redirect = String.format("%s/edit-questionnaire?id=%d",
+                getServletContext().getContextPath(), newQuestionnaire.getId());
 
         response.sendRedirect(redirect);
     }

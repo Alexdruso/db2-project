@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Admin Creation Page</title>
@@ -9,23 +9,27 @@
 <h1> Admin Creation Page</h1>
 
 <div class="form-group row">
-    <form th:action="@{/creation-page}" method="POST">
+    <form method="POST" th:action="@{/creation-page}">
         <h2>Select product</h2>
 
-        <select class="form-control" id="status" name="product">
-            <option th:each="prod : ${products}"
-                    th:value="${prod.getId()}"
-                    th:text="${prod.getName()}">
-            </option>
-        </select>
+        <p>
+            <select class="form-control" id="status" name="product">
+                <option th:each="prod : ${products}"
+                        th:text="${prod.getName()}"
+                        th:value="${prod.getId()}">
+                </option>
+            </select>
+        </p>
 
         <h2>Select Date</h2>
 
+        <p>
         <div>
-            <input type="date" name="date" th:value="${date}">
+            <input name="date" th:value="${date}" type="date">
         </div>
+        </p>
 
-        <button type="submit" name="action" value="submit"> Create Questionnaire</button>
+        <button name="create" type="submit" value="submit"> Create Questionnaire</button>
     </form>
 </div>
 

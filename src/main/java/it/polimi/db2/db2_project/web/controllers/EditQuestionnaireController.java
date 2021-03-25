@@ -15,11 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 @WebServlet(name = "EditQuestionnaireController", value = "/EditQuestionnaireController")
 public class EditQuestionnaireController extends TemplatingServlet {
@@ -45,7 +42,7 @@ public class EditQuestionnaireController extends TemplatingServlet {
 
         String questionnaireId = request.getParameter("id");
 
-        System.out.println(questionnaireId);
+        System.out.println("OOF");
 
         if (questionnaireId != null) {
             QuestionnaireEntity questionnaire = adminService.getQuestionnaire(Long.parseLong(questionnaireId));
@@ -62,22 +59,34 @@ public class EditQuestionnaireController extends TemplatingServlet {
         HttpSession session = request.getSession();
         UserEntity user = (UserEntity) session.getAttribute("user");
 
-//        if (session.isNew() || user == null) {
-//            String path = getServletContext().getContextPath() + "/";
-//            response.sendRedirect(path);
-//            return;
-//        }
+        if (session.isNew() || user == null) {
+            String path = getServletContext().getContextPath() + "/";
+            response.sendRedirect(path);
+            return;
+        }
+
+        System.out.println(user.getAdmin());
 
         String questionnaireId = request.getParameter("id");
 
         if (questionnaireId != null) {
             QuestionnaireEntity questionnaire = adminService.getQuestionnaire(Long.parseLong(questionnaireId));
 
-//            System.out.println(request.getParameter("questions"));
-//            System.out.println(request.getParameter("update"));
-
-            if(request.getParameter("add") != null) {
+            if (request.getParameter("add") != null) {
                 adminService.addMarketingQuestion(questionnaire.getId(), "placeholderoni?");
+
+            } else if (request.getParameter("update") != null) {
+                questionnaire.getQuestions().stream()
+                        .map(QuestionEntity::getId)
+                        .filter(id -> request.getParameter(id.toString()) != null)
+                        .forEach(id -> {
+                            String newText = request.getParameter(id.toString());
+                            if (!newText.isEmpty()) {
+                                adminService.updateQuestion(id, newText);
+                            } else {
+                                adminService.removeQuestion(id);
+                            }
+                        });
             }
         }
 

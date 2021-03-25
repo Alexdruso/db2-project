@@ -21,6 +21,10 @@
         <url-pattern>/edit-questionnaire</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>InspectionPageController</servlet-name>
+        <url-pattern>/inspection-page</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>CreationPageController</servlet-name>
         <url-pattern>/creation-page</url-pattern>
     </servlet-mapping>
