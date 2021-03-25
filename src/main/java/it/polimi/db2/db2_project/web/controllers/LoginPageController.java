@@ -8,11 +8,9 @@ import org.thymeleaf.templatemode.TemplateMode;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -45,7 +43,7 @@ public class LoginPageController extends TemplatingServlet {
             UserEntity user = result.get();
             request.getSession().setAttribute("user", user);
             if(user.getAdmin()) {
-                response.sendRedirect(getServletContext().getContextPath() + "/admin");
+                response.sendRedirect(getServletContext().getContextPath() + "/admin-panel");
             } else {
                 response.sendRedirect(getServletContext().getContextPath() + "/homepage");
             }

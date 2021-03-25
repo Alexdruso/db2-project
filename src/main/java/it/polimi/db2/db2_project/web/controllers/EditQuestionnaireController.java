@@ -4,8 +4,8 @@ import it.polimi.db2.db2_project.entities.QuestionEntity;
 import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
 import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.AdminService;
-import it.polimi.db2.db2_project.services.ProductService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
+import it.polimi.db2.db2_project.web.utils.SessionUtil;
 import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.ejb.EJB;
@@ -13,21 +13,17 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "EditQuestionnaireController", value = "/EditQuestionnaireController")
 public class EditQuestionnaireController extends TemplatingServlet {
 
     @EJB
     private AdminService adminService;
-
-    @EJB
-    private ProductService productService;
-
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public EditQuestionnaireController() {
         super("edit-questionnaire", TemplateMode.HTML, "WEB-INF/templates/", ".html");
@@ -37,17 +33,24 @@ public class EditQuestionnaireController extends TemplatingServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> context = new HashMap<>();
 
-        HttpSession session = request.getSession();
-        UserEntity user = (UserEntity) session.getAttribute("user");
+        Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
-        String questionnaireId = request.getParameter("id");
+        if (user.isEmpty()) {
+            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            return;
+        }
 
-        System.out.println("OOF");
+        Optional<QuestionnaireEntity> questionnaire = SessionUtil.getQuestionnaire(adminService, request, "id");
 
-        if (questionnaireId != null) {
-            QuestionnaireEntity questionnaire = adminService.getQuestionnaire(Long.parseLong(questionnaireId));
+        context.put("isAdmin", user.get().getAdmin());
+        context.put("questionnaire", questionnaire.orElse(null));
 
-            context.put("questionnaire", questionnaire);
+        if (questionnaire.isPresent()) {
+            List<QuestionEntity> mandatoryQuestions = questionnaire.get().getQuestions().stream()
+                    .filter(q -> !q.getOptional())
+                    .collect(Collectors.toList());
+
+            context.put("questions", mandatoryQuestions);
         }
 
         super.processTemplate(request, response, context);
@@ -55,44 +58,51 @@ public class EditQuestionnaireController extends TemplatingServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //check user logged in
-        HttpSession session = request.getSession();
-        UserEntity user = (UserEntity) session.getAttribute("user");
+        Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
-        if (session.isNew() || user == null) {
-            String path = getServletContext().getContextPath() + "/";
-            response.sendRedirect(path);
+        if (user.isEmpty()) {
+            response.sendRedirect(getServletContext().getContextPath() + "/login");
             return;
         }
 
-        System.out.println(user.getAdmin());
-
-        String questionnaireId = request.getParameter("id");
-
-        if (questionnaireId != null) {
-            QuestionnaireEntity questionnaire = adminService.getQuestionnaire(Long.parseLong(questionnaireId));
-
-            if (request.getParameter("add") != null) {
-                adminService.addMarketingQuestion(questionnaire.getId(), "placeholderoni?");
-
-            } else if (request.getParameter("update") != null) {
-                questionnaire.getQuestions().stream()
-                        .map(QuestionEntity::getId)
-                        .filter(id -> request.getParameter(id.toString()) != null)
-                        .forEach(id -> {
-                            String newText = request.getParameter(id.toString());
-                            if (!newText.isEmpty()) {
-                                adminService.updateQuestion(id, newText);
-                            } else {
-                                adminService.removeQuestion(id);
-                            }
-                        });
-            }
+        if (!user.get().getAdmin()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid permissions.");
+            return;
         }
 
-        String redirect = String.format("%s/edit-questionnaire?id=%s",
-                getServletContext().getContextPath(), questionnaireId);
+        Optional<QuestionnaireEntity> questionnaire = SessionUtil.getQuestionnaire(adminService, request, "id");
 
-        response.sendRedirect(redirect);
+        if (questionnaire.isPresent()) {
+            if (request.getParameter("add") != null) {
+                addPlaceholderQuestion(questionnaire.get());
+            } else if (request.getParameter("update") != null) {
+                updateQuestions(questionnaire.get(), request);
+            }
+
+            String redirect = String.format("%s/edit-questionnaire?id=%s",
+                    getServletContext().getContextPath(), questionnaire.get().getId());
+
+            response.sendRedirect(redirect);
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid questionnaire.");
+        }
+    }
+
+    private void updateQuestions(QuestionnaireEntity questionnaire, HttpServletRequest request) {
+        questionnaire.getQuestions().stream()
+                .map(QuestionEntity::getId)
+                .filter(id -> request.getParameter(id.toString()) != null)
+                .forEach(id -> {
+                    String newText = request.getParameter(id.toString());
+                    if (!newText.isEmpty()) {
+                        adminService.updateQuestion(id, newText);
+                    } else {
+                        adminService.removeQuestion(id);
+                    }
+                });
+    }
+
+    private void addPlaceholderQuestion(QuestionnaireEntity questionnaire) {
+        adminService.addMarketingQuestion(questionnaire.getId(), "<Placeholder Question>");
     }
 }

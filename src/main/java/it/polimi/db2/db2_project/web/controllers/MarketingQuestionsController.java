@@ -45,7 +45,7 @@ public class MarketingQuestionsController extends TemplatingServlet {
             context.put("missing", true);
         }
 
-        Map<Long, String> answers = SessionUtil.getAnswers(request);
+        Map<Long, String> answers = SessionUtil.getAnswersFromSession(request);
 
 
         submissionService.findCurrentQuestionnaire().ifPresentOrElse(
@@ -127,7 +127,7 @@ public class MarketingQuestionsController extends TemplatingServlet {
             return;
         }
 
-        SessionUtil.putAnswers(request, answers);
+        SessionUtil.saveAnswersToSession(request, answers);
 
 
         String path = getServletContext().getContextPath() + "/statistical-questions";

@@ -3,8 +3,9 @@ package it.polimi.db2.db2_project.web.controllers;
 import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
 import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.AdminService;
-import it.polimi.db2.db2_project.services.ProductService;
+import it.polimi.db2.db2_project.services.UserService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
+import it.polimi.db2.db2_project.web.utils.SessionUtil;
 import org.thymeleaf.templatemode.TemplateMode;
 
 import javax.ejb.EJB;
@@ -12,12 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @WebServlet(name = "InspectionPageController", value = "/InspectionPageController")
 public class InspectionPageController extends TemplatingServlet {
@@ -26,7 +24,7 @@ public class InspectionPageController extends TemplatingServlet {
     private AdminService adminService;
 
     @EJB
-    private ProductService productService;
+    private UserService userService;
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -38,24 +36,32 @@ public class InspectionPageController extends TemplatingServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> context = new HashMap<>();
 
-        if (request.getParameter("selected") != null) {
-            long questionnaireId = Long.parseLong(request.getParameter("selected"));
-            QuestionnaireEntity questionnaire = adminService.getQuestionnaire(questionnaireId);
-            context.put("selected", questionnaire);
+        Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
-            if (request.getParameter("user") != null) {
-                long userId = Long.parseLong(request.getParameter("user"));
-//                adminService.getAllAnswersByUser(userId, questionnaireId).get(0).getQuestion()
-                context.put("answers", adminService.getAllAnswersByUser(userId, questionnaireId));
+        if (user.isEmpty()) {
+            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            return;
+        }
+
+        Optional<QuestionnaireEntity> questionnaire = SessionUtil.getQuestionnaire(adminService, request, "questionnaire");
+        Optional<UserEntity> selectedUser = getUserId(request);
+
+        context.put("questionnaire", questionnaire.orElse(null));
+        context.put("user", selectedUser.orElse(null));
+
+        if (questionnaire.isPresent()) {
+            if (selectedUser.isPresent()) {
+                context.put("answers", adminService.getAllAnswersByUser(selectedUser.get().getId(), questionnaire.get().getId()));
             } else {
-                context.put("submissions", adminService.getAllSubmitters(questionnaireId));
-                context.put("cancellations", adminService.getAllCancellations(questionnaireId));
+                context.put("submissions", adminService.getAllSubmitters(questionnaire.get().getId()));
+                context.put("cancellations", adminService.getAllCancellations(questionnaire.get().getId()));
             }
         } else {
             List<QuestionnaireEntity> allQuestionnaires = adminService.getAllQuestionnaires();
             allQuestionnaires.sort(Comparator.comparing(QuestionnaireEntity::getDate));
 
             context.put("questionnaires", allQuestionnaires);
+            context.put("today", new Date());
         }
 
         super.processTemplate(request, response, context);
@@ -63,26 +69,36 @@ public class InspectionPageController extends TemplatingServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //check user logged in
-        HttpSession session = request.getSession();
-        UserEntity user = (UserEntity) session.getAttribute("user");
+        Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
-//        if (session.isNew() || user == null) {
-//            String path = getServletContext().getContextPath() + "/";
-//            response.sendRedirect(path);
-//            return;
-//        }
+        if (user.isEmpty()) {
+            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            return;
+        }
 
-//        System.out.println(user.getAdmin());
+        if (!user.get().getAdmin()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid permissions.");
+            return;
+        }
 
-
-        String questionnaireId = request.getParameter("selected");
+        String questionnaireId = request.getParameter("questionnaire");
         String userId = request.getParameter("user");
 
-
-        String redirect = String.format("%s/inspection-page?selected=%s&user=%s",
+        String redirect = String.format("%s/inspection-page?questionnaire=%s&user=%s",
                 getServletContext().getContextPath(), questionnaireId, userId);
 
         response.sendRedirect(redirect);
+    }
+
+    private Optional<UserEntity> getUserId(HttpServletRequest request) {
+        String user = request.getParameter("user");
+
+        if (user != null) {
+            if (user.matches("\\d+")) {
+                return userService.findUser(Long.parseLong(user));
+            }
+        }
+
+        return Optional.empty();
     }
 }

@@ -82,7 +82,7 @@ public class StatisticalQuestionsController extends TemplatingServlet {
 
         //check already answered to marketing questions
         //and consequently all other checks have been performed in the MarketingQuestionsController
-        Map<Long, String> answers = SessionUtil.getAnswers(request);
+        Map<Long, String> answers = SessionUtil.getAnswersFromSession(request);
 
         if (answers.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have yet to answer the marketing questions");
