@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home page</title>
+</head>
+<body>
+<span th:if="${isAdmin}">
+    <h1> Welcome, <span th:text="${username}"> Username </span> </h1>
+
+    <p>
+        <span th:if="${product} != null">
+
+        </span>
+
+        <span th:unless="${product} != null">
+            <h3> There is no product of the day for the current date. </h3>
+        </span>
+    </p>
+
+    <p> <a th:href="@{/creation-page}"> Go to Creation Page </a> </p>
+    <p> <a th:href="@{/inspection-page}"> Go to Inspection Page </a> </p>
+    <p> <a th:href="@{/deletion-page}"> Go to Deletion Page </a> </p>
+
+</span>
+
+<span th:unless="${isAdmin}">
+    <h1> You don't have permission to view this page. </h1>
+    <p> <a th:href="@{/homepage}"> Return to home </a> </p>
+</span>
+</body>
+</html>

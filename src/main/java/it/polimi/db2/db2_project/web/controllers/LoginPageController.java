@@ -40,6 +40,7 @@ public class LoginPageController extends TemplatingServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         Optional<UserEntity> result = userService.checkCredentials(username, password);
+
         if(result.isPresent()) {
             UserEntity user = result.get();
             request.getSession().setAttribute("user", user);

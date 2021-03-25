@@ -30,7 +30,6 @@ public class HomePageController extends TemplatingServlet {
 
     public HomePageController() {
         super("welcome", TemplateMode.HTML, "WEB-INF/templates/", ".html");
-
     }
 
     @Override

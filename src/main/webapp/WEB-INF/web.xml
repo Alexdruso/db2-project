@@ -17,6 +17,22 @@
         <url-pattern>/test</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>AdminPanelController</servlet-name>
+        <url-pattern>/admin-panel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditQuestionnaireController</servlet-name>
+        <url-pattern>/edit-questionnaire</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InspectionPageController</servlet-name>
+        <url-pattern>/inspection-page</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreationPageController</servlet-name>
+        <url-pattern>/creation-page</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>LoginPageController</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>

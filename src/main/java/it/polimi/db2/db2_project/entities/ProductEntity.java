@@ -55,7 +55,6 @@ public class ProductEntity implements Serializable {
         this.id = id;
     }
 
-
     @Basic
     @Column(name = "name")
     public String getName() {

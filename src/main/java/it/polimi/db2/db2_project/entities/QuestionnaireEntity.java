@@ -12,6 +12,12 @@ import java.util.Objects;
 @NamedQueries(
         {
                 @NamedQuery(
+                        name = "Questionnaire.findById",
+                        query = "SELECT q " +
+                                "FROM QuestionnaireEntity q " +
+                                "WHERE q.id = :id"
+                ),
+                @NamedQuery(
                         name = "Questionnaire.findByDate",
                         query = "SELECT q " +
                                 "FROM QuestionnaireEntity q " +
@@ -24,14 +30,14 @@ import java.util.Objects;
                 ),
                 @NamedQuery(
                         name = "Questionnaire.findSubmitters",
-                        query = "SELECT u " +
-                                "FROM QuestionnaireSubmissionEntity s JOIN s.user u " +
+                        query = "SELECT s.user " +
+                                "FROM QuestionnaireSubmissionEntity s " +
                                 "WHERE s.points > 0 AND s.questionnaire.id = :id  "
                 ),
                 @NamedQuery(
                         name = "Questionnaire.findCancellation",
-                        query = "SELECT u " +
-                                "FROM QuestionnaireSubmissionEntity s JOIN s.user u " +
+                        query = "SELECT s.user " +
+                                "FROM QuestionnaireSubmissionEntity s " +
                                 "WHERE s.points = 0 AND s.questionnaire.id = :id  "
                 )
 
@@ -48,8 +54,8 @@ public class QuestionnaireEntity implements Serializable {
     //relationships definition part
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "questionnaire_to_question", schema = "db2",
-            joinColumns = @JoinColumn(name = "question_id"),
-            inverseJoinColumns = @JoinColumn(name = "questionnaire_id"))
+            joinColumns = @JoinColumn(name = "questionnaire_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_id"))
     private List<QuestionEntity> questions = new ArrayList<>();
 
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)

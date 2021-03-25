@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Creation Page</title>
+</head>
+<body>
+
+<h1> Admin Creation Page</h1>
+
+<span th:if="${questionnaire != null}">
+    <h3> <a th:text="${questionnaire.getProductEntity().getName()}"></a> </h3>
+
+    <h4> Mandatory Questions </h4>
+    <h5> To remove a question, simply erase its content and click on 'update questions' </h5>
+
+    <form th:action="@{/edit-questionnaire?id=__${questionnaire.getId()}__}" th:object="${questionnaire.getQuestions()}"
+          method="POST">
+        <div th:each="question, i: ${questionnaire.getQuestions()}">
+            <p>
+                <input type="text" size="75" th:name="${question.getId()}" th:value="${question.getText()}"/>
+            </p>
+        </div>
+
+        <p>
+            <button type="submit" name="update"> Update questions </button>
+        </p>
+        <p>
+            <button type="submit" name="add"> Add new question </button>
+        </p>
+    </form>
+
+</span>
+
+<p>
+    <a id=center th:href="@{/}">Return to home</a>
+</p>
+
+</body>
+</html>
