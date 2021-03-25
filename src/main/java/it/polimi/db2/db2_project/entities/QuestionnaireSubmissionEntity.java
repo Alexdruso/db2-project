@@ -63,6 +63,7 @@ public class QuestionnaireSubmissionEntity implements Serializable {
     public QuestionnaireSubmissionEntity(UserEntity user, QuestionnaireEntity questionnaire) {
         this.user = user;
         this.questionnaire = questionnaire;
+        this.points = 0;
     }
 
     public List<AnswerEntity> getAnswers() {
