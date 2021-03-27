@@ -22,12 +22,7 @@ import java.util.Optional;
 public class AdminPanelController extends TemplatingServlet {
 
     @EJB
-    private AdminService adminService;
-
-    @EJB
     private SubmissionService submissionService;
-
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public AdminPanelController() {
         super("admin-panel", TemplateMode.HTML, "WEB-INF/templates/", ".html");

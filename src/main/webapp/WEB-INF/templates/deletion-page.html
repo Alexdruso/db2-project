@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home page</title>
+</head>
+<body>
+<td th:if="${isAdmin}">
+    <h1> Welcome, <span th:text="${username}"> Username </span></h1>
+
+    <h2> Here you can delete data from past questionnaires </h2>
+
+    <a th:each="q, i: ${questionnaires}">
+        <form method="POST" th:action="@{/deletion-page}">
+            <p>
+                <a th:text="${
+                #dates.format(q.getDate(), 'dd/MMM/yyyy') + ' - ' + q.getProductEntity().getName()
+                }"></a>
+            </p>
+            <button th:name="${q.getId()}" th:value="${q.getId()}" th:text="Delete" type="submit"></button>
+        </form>
+    </a>
+</td>
+
+<td th:unless="${isAdmin}">
+    <h1> You don't have permission to view this page. </h1>
+    <p><a th:href="@{/homepage}"> Return to home </a></p>
+</td>
+
+</body>
+</html>

@@ -33,6 +33,10 @@
         <url-pattern>/creation-page</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>DeletionPageController</servlet-name>
+        <url-pattern>/deletion-page</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>LoginPageController</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
