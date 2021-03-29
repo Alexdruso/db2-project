@@ -46,11 +46,11 @@ public class QuestionnaireSubmissionEntity implements Serializable {
 
     //relationships definition part
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
     @JoinColumn(name = "USER_ID", nullable = false)
     private UserEntity user;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
     @JoinColumn(name = "QUESTIONNAIRE_ID", nullable = false)
     private QuestionnaireEntity questionnaire;
 

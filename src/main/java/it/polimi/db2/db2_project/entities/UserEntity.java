@@ -38,7 +38,7 @@ public class UserEntity implements Serializable {
     private Boolean admin;
 
     //relationships definition part
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionnaireEntity> questionnaires = new ArrayList<>();
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionnaireSubmissionEntity> questionnaireSubmissions = new ArrayList<>();

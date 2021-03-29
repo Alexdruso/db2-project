@@ -47,11 +47,11 @@ public class AnswerEntity implements Serializable {
     private String text;
 
     //relationships definition part
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "question_id")
     private QuestionEntity question;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
     @JoinColumn(name = "QUESTIONNAIRE_SUBMISSION_ID", nullable = false)
     private QuestionnaireSubmissionEntity questionnaireSubmission;
 
