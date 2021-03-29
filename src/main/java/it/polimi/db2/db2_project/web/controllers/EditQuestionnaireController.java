@@ -36,7 +36,8 @@ public class EditQuestionnaireController extends TemplatingServlet {
         Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
         if (user.isEmpty()) {
-            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
             return;
         }
 
@@ -61,7 +62,8 @@ public class EditQuestionnaireController extends TemplatingServlet {
         Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
         if (user.isEmpty()) {
-            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
             return;
         }
 

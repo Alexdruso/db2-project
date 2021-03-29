@@ -1,5 +1,6 @@
 package it.polimi.db2.db2_project.web.controllers;
 
+import it.polimi.db2.db2_project.entities.AnswerEntity;
 import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
 import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.AdminService;
@@ -14,7 +15,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @WebServlet(name = "InspectionPageController", value = "/InspectionPageController")
@@ -25,8 +25,6 @@ public class InspectionPageController extends TemplatingServlet {
 
     @EJB
     private UserService userService;
-
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public InspectionPageController() {
         super("inspection-page", TemplateMode.HTML, "WEB-INF/templates/", ".html");
@@ -39,7 +37,8 @@ public class InspectionPageController extends TemplatingServlet {
         Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
         if (user.isEmpty()) {
-            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
             return;
         }
 
@@ -51,10 +50,15 @@ public class InspectionPageController extends TemplatingServlet {
 
         if (questionnaire.isPresent()) {
             if (selectedUser.isPresent()) {
-                context.put("answers", adminService.getAllAnswersByUser(selectedUser.get().getId(), questionnaire.get().getId()));
+                List<AnswerEntity> answers = adminService.getAllAnswersByUser(selectedUser.get().getId(), questionnaire.get().getId());
+
+                context.put("answers", answers);
             } else {
-                context.put("submissions", adminService.getAllSubmitters(questionnaire.get().getId()));
-                context.put("cancellations", adminService.getAllCancellations(questionnaire.get().getId()));
+                List<UserEntity> submitters = adminService.getAllSubmitters(questionnaire.get().getId());
+                List<UserEntity> cancellations = adminService.getAllCancellations(questionnaire.get().getId());
+
+                context.put("submissions", submitters);
+                context.put("cancellations", cancellations);
             }
         } else {
             List<QuestionnaireEntity> allQuestionnaires = adminService.getAllQuestionnaires();
@@ -72,7 +76,8 @@ public class InspectionPageController extends TemplatingServlet {
         Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
         if (user.isEmpty()) {
-            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
             return;
         }
 
@@ -84,10 +89,10 @@ public class InspectionPageController extends TemplatingServlet {
         String questionnaireId = request.getParameter("questionnaire");
         String userId = request.getParameter("user");
 
-        String redirect = String.format("%s/inspection-page?questionnaire=%s&user=%s",
+        String path = String.format("%s/inspection-page?questionnaire=%s&user=%s",
                 getServletContext().getContextPath(), questionnaireId, userId);
 
-        response.sendRedirect(redirect);
+        response.sendRedirect(path);
     }
 
     private Optional<UserEntity> getUserId(HttpServletRequest request) {

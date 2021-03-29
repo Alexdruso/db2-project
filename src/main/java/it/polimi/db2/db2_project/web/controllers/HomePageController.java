@@ -24,45 +24,39 @@ public class HomePageController extends TemplatingServlet {
     @EJB
     private ProductService productService;
 
-    @EJB
-    private SubmissionService submissionService;
-
-
     public HomePageController() {
         super("welcome", TemplateMode.HTML, "WEB-INF/templates/", ".html");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
-        Optional<UserEntity> userOpt = SessionUtil.checkLogin(request);
-
-        if (userOpt.isEmpty()) {
+        if (user.isEmpty()) {
             String path = getServletContext().getContextPath() + "/login";
             response.sendRedirect(path);
             return;
         }
 
-        UserEntity user = userOpt.get();
-
-        if (user.getBan()) {
+        if (user.get().getBan()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have been banned.");
             return;
         }
 
-        final Map<String, Object> ctx = new HashMap<>();
-        ctx.put("converter", new ImageUtil());
+        final Map<String, Object> context = new HashMap<>();
+        context.put("converter", new ImageUtil());
 
         productService.findCurrentProduct().ifPresentOrElse(
                 product -> {
-                    ctx.put("product", product);
-                    ctx.put("reviews", productService.findProductReviews(product));
+                    context.put("product", product);
+                    context.put("reviews", productService.findProductReviews(product));
                 },
-                () -> ctx.put("product", null)
+                () -> context.put("product", null)
         );
 
 
-        ctx.put("username", user.getUsername());
-        super.processTemplate(request, response, ctx);
+        context.put("username", user.get().getUsername());
+
+        super.processTemplate(request, response, context);
     }
 }

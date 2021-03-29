@@ -20,6 +20,7 @@
             <button th:name="${q.getId()}" th:value="${q.getId()}" th:text="Delete" type="submit"></button>
         </form>
     </a>
+    <p><a th:href="@{/admin-panel}"> Return to home </a></p>
 </td>
 
 <td th:unless="${isAdmin}">

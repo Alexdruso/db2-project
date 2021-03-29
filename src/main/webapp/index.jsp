@@ -1,9 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html >
 <head>
     <title>JSP - Hello World</title>
 </head>
+<jsp:forward page="/login"/>
 <body>
 <h1><%= "Hello World!" %>
 </h1>

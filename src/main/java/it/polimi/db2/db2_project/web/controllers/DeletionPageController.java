@@ -39,7 +39,8 @@ public class DeletionPageController extends TemplatingServlet {
         Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
         if (user.isEmpty()) {
-            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
             return;
         }
 
@@ -59,7 +60,8 @@ public class DeletionPageController extends TemplatingServlet {
         Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
         if (user.isEmpty()) {
-            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
             return;
         }
 
@@ -72,6 +74,10 @@ public class DeletionPageController extends TemplatingServlet {
                 .filter(isBeforePresentDay())
                 .filter(q -> request.getParameter(q.getId().toString()) != null)
                 .forEach(q -> adminService.deleteQuestionnaire(q.getId()));
+
+        String redirect = String.format("%s/deletion-page", getServletContext().getContextPath());
+
+        response.sendRedirect(redirect);
     }
 
     private Predicate<QuestionnaireEntity> isBeforePresentDay() {

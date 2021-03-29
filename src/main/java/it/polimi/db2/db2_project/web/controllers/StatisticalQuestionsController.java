@@ -26,6 +26,7 @@ public class StatisticalQuestionsController extends TemplatingServlet {
 
     @EJB
     SubmissionService submissionService;
+
     @EJB
     UserService userService;
 
@@ -42,33 +43,24 @@ public class StatisticalQuestionsController extends TemplatingServlet {
                             "statisticalQuestions",
                             submissionService.findStatisticalQuestions(questionnaire.getId())
                     );
-                    context.put(
-                            "available",
-                            true
-                    );
+                    context.put("available", true);
                 },
-                () -> context.put(
-                        "available",
-                        false
-                )
+                () -> context.put("available", false)
         );
         super.processTemplate(request, response, context);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
-        Optional<UserEntity> userOpt = SessionUtil.checkLogin(request);
-
-        if (userOpt.isEmpty()) {
+        if (user.isEmpty()) {
             String path = getServletContext().getContextPath() + "/login";
             response.sendRedirect(path);
             return;
         }
 
-        UserEntity user = userOpt.get();
-
-        if (user.getBan()) {
+        if (user.get().getBan()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have been banned.");
             return;
         }
@@ -94,13 +86,14 @@ public class StatisticalQuestionsController extends TemplatingServlet {
         for (QuestionEntity question : submissionService.findStatisticalQuestions(questionnaire.get().getId())) {
             String answer = request.getParameter(question.getId().toString());
 
-            if (answer != null && !answer.isEmpty()) answers.put(question.getId(), answer);
+            if (answer != null && !answer.isEmpty())
+                answers.put(question.getId(), answer);
         }
 
         //check no offensive words
 
         if (submissionService.checkOffensiveWords(new ArrayList<>(answers.values()))) {
-            userService.banUser(user.getId());
+            userService.banUser(user.get().getId());
 
             response.sendError(
                     HttpServletResponse.SC_BAD_REQUEST,
@@ -109,8 +102,8 @@ public class StatisticalQuestionsController extends TemplatingServlet {
             return;
         }
 
-        QuestionnaireSubmissionEntity questionnaireSubmission = submissionService
-                .createQuestionnaireSubmission(user.getId(), questionnaire.get().getId());
+        QuestionnaireSubmissionEntity questionnaireSubmission = submissionService.createQuestionnaireSubmission(
+                user.get().getId(), questionnaire.get().getId());
 
         submissionService.submitAnswers(questionnaireSubmission.getId(), answers);
 

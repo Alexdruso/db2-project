@@ -21,16 +21,14 @@ public class RegistrationController extends TemplatingServlet {
     private UserService userService;
 
     public RegistrationController() {
-            super("registration", TemplateMode.HTML, "WEB-INF/templates/", ".html");
+        super("registration", TemplateMode.HTML, "WEB-INF/templates/", ".html");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> ctx = new HashMap<>();
 
-
         super.processTemplate(request, response, ctx);
-
     }
 
     @Override
@@ -38,12 +36,22 @@ public class RegistrationController extends TemplatingServlet {
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        boolean valid = !(username.isBlank() || email.isBlank() || password.isBlank() || username.isEmpty() || password.isEmpty() || email.isEmpty());
-        Optional<UserEntity> result = userService.createUser(username, email, password);
-        if(result.isPresent() && valid) {
-            response.sendRedirect(getServletContext().getContextPath() + "/registration-success");
-        } else {
+
+        boolean invalid = username.isBlank() || email.isBlank() || password.isBlank() ||
+                username.isEmpty() || password.isEmpty() || email.isEmpty();
+
+        if (invalid) {
             response.sendRedirect(getServletContext().getContextPath() + "/registration");
+            return;
         }
+
+        Optional<UserEntity> result = userService.createUser(username, email, password);
+
+        if (result.isEmpty()) {
+            response.sendRedirect(getServletContext().getContextPath() + "/registration");
+            return;
+        }
+
+        response.sendRedirect(getServletContext().getContextPath() + "/registration-success");
     }
 }

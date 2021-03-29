@@ -35,16 +35,15 @@ public class CancellationController extends TemplatingServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
-        Optional<UserEntity> userOpt = SessionUtil.checkLogin(request);
-        if(userOpt.isEmpty()) return;
-        UserEntity user = userOpt.get();
+        if (user.isEmpty()) {
+            return;
+        }
 
-        Optional<QuestionnaireEntity> questionnaireOptional = submissionService.findCurrentQuestionnaire();
+        Optional<QuestionnaireEntity> questionnaire = submissionService.findCurrentQuestionnaire();
 
-        questionnaireOptional.ifPresent(
-                questionnaire -> submissionService.cancelQuestionnaireSubmission(user.getId(), questionnaire.getId())
-        );
+        questionnaire.ifPresent(q -> submissionService.cancelQuestionnaireSubmission(user.get().getId(), q.getId()));
 
         String path = getServletContext().getContextPath() + "/homepage";
         response.sendRedirect(path);

@@ -18,12 +18,6 @@ import java.util.Optional;
 @WebServlet(name = "RegistrationSuccessController", value = "/RegistrationSuccessController")
 public class RegistrationSuccessController extends TemplatingServlet {
 
-    @EJB
-    private UserService userService;
-
-    @EJB
-    private SubmissionService submissionService;
-
     public RegistrationSuccessController() {
         super("registration-success", TemplateMode.HTML, "WEB-INF/templates/", ".html");
     }
@@ -31,6 +25,5 @@ public class RegistrationSuccessController extends TemplatingServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         super.processTemplate(request, response);
-
     }
 }

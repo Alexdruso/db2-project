@@ -5,7 +5,6 @@ import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
 import it.polimi.db2.db2_project.entities.QuestionnaireSubmissionEntity;
 import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.SubmissionService;
-import it.polimi.db2.db2_project.services.UserService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
 import it.polimi.db2.db2_project.web.utils.SessionUtil;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -25,9 +24,6 @@ import java.util.Optional;
 public class MarketingQuestionsController extends TemplatingServlet {
 
     @EJB
-    private UserService userService;
-
-    @EJB
     private SubmissionService submissionService;
 
     public MarketingQuestionsController() {
@@ -38,15 +34,17 @@ public class MarketingQuestionsController extends TemplatingServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> context = new HashMap<>();
 
-        Optional<UserEntity> userOpt = SessionUtil.checkLogin(request);
-        if(userOpt.isEmpty()) return;
-        UserEntity user = userOpt.get();
-        if(request.getParameter("missing") != null) {
-            context.put("missing", true);
+        Optional<UserEntity> user = SessionUtil.checkLogin(request);
+
+        if (user.isEmpty()) {
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
+            return;
         }
 
-        Map<Long, String> answers = SessionUtil.getAnswersFromSession(request);
+        context.put("missing", request.getParameter("missing") != null);
 
+        Map<Long, String> answers = SessionUtil.getAnswersFromSession(request);
 
         submissionService.findCurrentQuestionnaire().ifPresentOrElse(
                 questionnaire -> {
@@ -54,37 +52,28 @@ public class MarketingQuestionsController extends TemplatingServlet {
                             "marketingQuestions",
                             submissionService.findMarketingQuestions(questionnaire.getId())
                     );
-                    if(!answers.isEmpty()) {
+                    if (!answers.isEmpty()) {
                         context.put("marketingAnswers", answers);
                     }
-                    context.put(
-                            "available",
-                            true
-                    );
+                    context.put("available", true);
                 },
-                () -> context.put(
-                        "available",
-                        false
-                )
+                () -> context.put("available", false)
         );
-        super.processTemplate(request, response, context);
 
+        super.processTemplate(request, response, context);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
-        Optional<UserEntity> userOpt = SessionUtil.checkLogin(request);
-
-        if (userOpt.isEmpty()) {
+        if (user.isEmpty()) {
             String path = getServletContext().getContextPath() + "/login";
             response.sendRedirect(path);
             return;
         }
 
-        UserEntity user = userOpt.get();
-
-        if (user.getBan()) {
+        if (user.get().getBan()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have been banned.");
             return;
         }
@@ -97,12 +86,11 @@ public class MarketingQuestionsController extends TemplatingServlet {
         }
 
         Optional<QuestionnaireSubmissionEntity> questionnaireSubmission = submissionService.findQuestionnaireSubmission(
-                user.getId(),
+                user.get().getId(),
                 questionnaire.get().getId()
         );
 
-
-        if(questionnaireSubmission.isPresent() && questionnaireSubmission.get().getPoints() > 0) {
+        if (questionnaireSubmission.isPresent() && questionnaireSubmission.get().getPoints() > 0) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You have already answered to this questionnaire");
             return;
         }
@@ -111,10 +99,10 @@ public class MarketingQuestionsController extends TemplatingServlet {
 
         Map<Long, String> answers = new HashMap<>();
         boolean missing = false;
-        for(QuestionEntity question : submissionService.findMarketingQuestions(questionnaire.get().getId())){
+        for (QuestionEntity question : submissionService.findMarketingQuestions(questionnaire.get().getId())) {
             String answer = request.getParameter(question.getId().toString());
 
-            if(answer != null && !answer.isEmpty()) {
+            if (answer != null && !answer.isEmpty()) {
                 answers.put(question.getId(), answer);
             } else {
                 missing = true;
@@ -128,7 +116,6 @@ public class MarketingQuestionsController extends TemplatingServlet {
         }
 
         SessionUtil.saveAnswersToSession(request, answers);
-
 
         String path = getServletContext().getContextPath() + "/statistical-questions";
         response.sendRedirect(path);

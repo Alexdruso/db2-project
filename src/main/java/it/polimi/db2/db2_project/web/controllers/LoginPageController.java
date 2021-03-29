@@ -26,30 +26,40 @@ public class LoginPageController extends TemplatingServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HashMap<String, Object> ctx = new HashMap<>();
-        if(request.getParameter("login_failed") != null) {
-            ctx.put("login_error", true);
+        HashMap<String, Object> context = new HashMap<>();
+
+        if (request.getParameter("login_failed") != null) {
+            context.put("login_error", true);
         }
-        super.processTemplate(request, response, ctx);
+
+        super.processTemplate(request, response, context);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+
         Optional<UserEntity> result = userService.checkCredentials(username, password);
 
-        if(result.isPresent()) {
+        String path;
+
+        if (result.isPresent()) {
             UserEntity user = result.get();
             request.getSession().setAttribute("user", user);
-            if(user.getAdmin()) {
-                response.sendRedirect(getServletContext().getContextPath() + "/admin-panel");
+
+
+            if (user.getAdmin()) {
+                path = getServletContext().getContextPath() + "/admin-panel";
             } else {
-                response.sendRedirect(getServletContext().getContextPath() + "/homepage");
+                path = getServletContext().getContextPath() + "/homepage";
             }
+
         } else {
-            response.sendRedirect(getServletContext().getContextPath() + "/login?login_failed=true");
+            path = getServletContext().getContextPath() + "/login?login_failed=true";
         }
+
+        response.sendRedirect(path);
     }
 
 }

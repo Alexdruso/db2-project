@@ -1,7 +1,6 @@
 package it.polimi.db2.db2_project.web.controllers;
 
 import it.polimi.db2.db2_project.entities.UserEntity;
-import it.polimi.db2.db2_project.services.AdminService;
 import it.polimi.db2.db2_project.services.SubmissionService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
 import it.polimi.db2.db2_project.web.utils.ImageUtil;
@@ -14,7 +13,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -35,7 +33,8 @@ public class AdminPanelController extends TemplatingServlet {
         Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
         if (user.isEmpty()) {
-            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
             return;
         }
 

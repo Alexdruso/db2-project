@@ -23,13 +23,11 @@ import java.util.Optional;
 @WebServlet(name = "CreationPageController", value = "/CreationPageController")
 public class CreationPageController extends TemplatingServlet {
 
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     @EJB
     private AdminService adminService;
-
     @EJB
     private ProductService productService;
-
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public CreationPageController() {
         super("creation-page", TemplateMode.HTML, "WEB-INF/templates/", ".html");
@@ -42,7 +40,8 @@ public class CreationPageController extends TemplatingServlet {
         Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
         if (user.isEmpty()) {
-            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
             return;
         }
 
@@ -58,7 +57,8 @@ public class CreationPageController extends TemplatingServlet {
         Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
         if (user.isEmpty()) {
-            response.sendRedirect(getServletContext().getContextPath() + "/login");
+            String path = getServletContext().getContextPath() + "/login";
+            response.sendRedirect(path);
             return;
         }
 
@@ -73,16 +73,26 @@ public class CreationPageController extends TemplatingServlet {
 
         try {
             questionnaireDate = dateFormat.parse(request.getParameter("date"));
+
+            if (questionnaireDate.before(new Date())) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Questionnaires can only be created for a future date");
+                return;
+            }
+
         } catch (ParseException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid date format");
             return;
         }
 
-        QuestionnaireEntity newQuestionnaire = adminService.createQuestionnaire(user.get().getId(), productId, questionnaireDate);
+        QuestionnaireEntity newQuestionnaire = adminService.createQuestionnaire(
+                user.get().getId(),
+                productId,
+                questionnaireDate
+        );
 
-        String redirect = String.format("%s/edit-questionnaire?id=%d",
+        String path = String.format("%s/edit-questionnaire?id=%d",
                 getServletContext().getContextPath(), newQuestionnaire.getId());
 
-        response.sendRedirect(redirect);
+        response.sendRedirect(path);
     }
 }

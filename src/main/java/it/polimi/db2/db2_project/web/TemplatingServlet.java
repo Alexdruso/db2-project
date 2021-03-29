@@ -17,9 +17,9 @@ public abstract class TemplatingServlet extends HttpServlet {
 
     protected TemplateMode templateMode;
     protected TemplateEngine templateEngine;
-    private String templatePath;
-    private String pathPrefix;
-    private String pathSuffix;
+    private final String templatePath;
+    private final String pathPrefix;
+    private final String pathSuffix;
 
 
     public TemplatingServlet(String templatePath, TemplateMode templateMode, String pathPrefix, String pathSuffix) {
@@ -31,29 +31,30 @@ public abstract class TemplatingServlet extends HttpServlet {
     }
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         ServletContext servletContext = getServletContext();
         ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
+
         templateResolver.setTemplateMode(templateMode);
         templateResolver.setSuffix(pathSuffix);
         templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setPrefix(pathPrefix);
     }
 
-    protected void processTemplate(HttpServletRequest request,
-                                   HttpServletResponse response) throws IOException {
+    protected void processTemplate(HttpServletRequest request, HttpServletResponse response) throws IOException {
         processTemplate(request, response, null);
     }
 
-    protected void processTemplate(HttpServletRequest request,
-                                         HttpServletResponse response,
-                                         Map<String, Object> variables) throws IOException {
-        System.out.println(System.getProperty("user.dir"));
+    protected void processTemplate(HttpServletRequest request, HttpServletResponse response,
+                                   Map<String, Object> variables) throws IOException {
         ServletContext servletCtx = getServletContext();
+
         final WebContext webCtx = new WebContext(request, response, servletCtx, request.getLocale());
-        if(variables != null) {
+
+        if (variables != null) {
             webCtx.setVariables(variables);
         }
+
         templateEngine.process(templatePath, webCtx, response.getWriter());
     }
 }
