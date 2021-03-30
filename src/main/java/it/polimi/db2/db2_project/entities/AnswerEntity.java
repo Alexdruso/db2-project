@@ -12,10 +12,7 @@ import java.util.Objects;
                         name = "Product.findReviewsByProduct",
                         query = "SELECT a " +
                                 "FROM AnswerEntity a " +
-                                "JOIN QuestionnaireSubmissionEntity qs " +
-                                "JOIN QuestionnaireEntity q " +
-                                "JOIN ProductEntity p " +
-                                "WHERE p.id = :productId"
+                                "WHERE a.questionnaireSubmission.questionnaire.product.id = :productId"
                 ),
                 @NamedQuery(
                         name = "Answer.findAnswersByUserAndQuestionnaire",

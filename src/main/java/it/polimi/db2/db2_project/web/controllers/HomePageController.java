@@ -1,5 +1,7 @@
 package it.polimi.db2.db2_project.web.controllers;
 
+import it.polimi.db2.db2_project.entities.AnswerEntity;
+import it.polimi.db2.db2_project.entities.ProductEntity;
 import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.ProductService;
 import it.polimi.db2.db2_project.services.SubmissionService;
@@ -44,18 +46,16 @@ public class HomePageController extends TemplatingServlet {
         }
 
         final Map<String, Object> context = new HashMap<>();
-        context.put("converter", new ImageUtil());
-
-        productService.findCurrentProduct().ifPresentOrElse(
-                product -> {
-                    context.put("product", product);
-                    context.put("reviews", productService.findProductReviews(product));
-                },
-                () -> context.put("product", null)
-        );
-
-
         context.put("username", user.get().getUsername());
+
+        Optional<ProductEntity> product = productService.findCurrentProduct();
+
+        context.put("product", product.orElse(null));
+        product.ifPresent(p -> context.put("reviews", productService.findProductReviews(p)));
+
+        for (AnswerEntity productReview : productService.findProductReviews(product.get())) {
+            System.out.println(productReview.getText());
+        }
 
         super.processTemplate(request, response, context);
     }
