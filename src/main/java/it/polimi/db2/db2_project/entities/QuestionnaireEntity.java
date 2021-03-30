@@ -59,9 +59,13 @@ public class QuestionnaireEntity implements Serializable {
     @JoinColumn(name = "USER_ID", nullable = false)
     private UserEntity user;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
+
+    public ProductEntity getProduct() {
+        return product;
+    }
 
     public QuestionnaireEntity() {
     }
