@@ -52,7 +52,7 @@ public class QuestionnaireEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "question_id"))
     private List<QuestionEntity> questions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "questionnaire", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, orphanRemoval = true)
     private List<QuestionnaireSubmissionEntity> questionnaireSubmissions = new ArrayList<>();
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
