@@ -41,11 +41,18 @@ public class CancellationController extends TemplatingServlet {
             return;
         }
 
-        Optional<QuestionnaireEntity> questionnaire = submissionService.findCurrentQuestionnaire();
+        String path;
 
-        questionnaire.ifPresent(q -> submissionService.cancelQuestionnaireSubmission(user.get().getId(), q.getId()));
+        if(request.getParameter("yes") != null) {
+            Optional<QuestionnaireEntity> questionnaire = submissionService.findCurrentQuestionnaire();
 
-        String path = getServletContext().getContextPath() + "/homepage";
+            questionnaire.ifPresent(q -> submissionService.cancelQuestionnaireSubmission(user.get().getId(), q.getId()));
+
+            path = getServletContext().getContextPath() + "/homepage";
+        } else {
+            path = getServletContext().getContextPath() + "/statistical-questions";
+        }
+
         response.sendRedirect(path);
     }
 }

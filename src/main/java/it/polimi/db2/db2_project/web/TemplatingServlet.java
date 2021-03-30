@@ -6,7 +6,6 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,11 +14,11 @@ import java.util.Map;
 
 public abstract class TemplatingServlet extends HttpServlet {
 
-    protected TemplateMode templateMode;
-    protected TemplateEngine templateEngine;
     private final String templatePath;
     private final String pathPrefix;
     private final String pathSuffix;
+    protected TemplateMode templateMode;
+    protected TemplateEngine templateEngine;
 
 
     public TemplatingServlet(String templatePath, TemplateMode templateMode, String pathPrefix, String pathSuffix) {

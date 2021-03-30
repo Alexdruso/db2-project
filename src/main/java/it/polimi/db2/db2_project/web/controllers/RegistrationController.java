@@ -26,9 +26,7 @@ public class RegistrationController extends TemplatingServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HashMap<String, Object> ctx = new HashMap<>();
-
-        super.processTemplate(request, response, ctx);
+        super.processTemplate(request, response);
     }
 
     @Override

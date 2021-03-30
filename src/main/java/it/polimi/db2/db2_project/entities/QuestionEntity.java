@@ -39,7 +39,6 @@ public class QuestionEntity implements Serializable {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnswerEntity> answers;
 
-
     public List<QuestionnaireEntity> getQuestionnaires() {
         return questionnaires;
     }

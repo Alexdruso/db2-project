@@ -1,5 +1,7 @@
 package it.polimi.db2.db2_project.entities;
 
+import it.polimi.db2.db2_project.web.utils.ImageUtil;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -69,6 +71,10 @@ public class ProductEntity implements Serializable {
     @Column(name = "image")
     public byte[] getImage() {
         return image;
+    }
+
+    public String getImageBase64() {
+        return ImageUtil.getImgData(getImage());
     }
 
     public void setImage(byte[] image) {

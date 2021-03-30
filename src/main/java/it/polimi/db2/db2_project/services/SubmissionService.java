@@ -35,8 +35,8 @@ public class SubmissionService {
      */
     public Optional<QuestionnaireEntity> findQuestionnaire(Date date) {
         return em.createNamedQuery("Questionnaire.findByDate", QuestionnaireEntity.class)
-                        .setParameter("date", date, TemporalType.DATE)
-                        .getResultStream().findFirst();
+                .setParameter("date", date, TemporalType.DATE)
+                .getResultStream().findFirst();
     }
 
     /**
@@ -98,12 +98,12 @@ public class SubmissionService {
      */
     public Optional<QuestionnaireSubmissionEntity> findQuestionnaireSubmission(long userId, long questionnaireId) {
         return em.createNamedQuery(
-                        "QuestionnaireSubmission.findByUserAndQuestionnaire",
-                        QuestionnaireSubmissionEntity.class
-                )
-                        .setParameter("userId", userId)
-                        .setParameter("questionnaireId", questionnaireId)
-                        .getResultStream().findFirst();
+                "QuestionnaireSubmission.findByUserAndQuestionnaire",
+                QuestionnaireSubmissionEntity.class
+        )
+                .setParameter("userId", userId)
+                .setParameter("questionnaireId", questionnaireId)
+                .getResultStream().findFirst();
     }
 
 
@@ -155,8 +155,6 @@ public class SubmissionService {
 
         em.flush();
     }
-
-
 
 
     public void updateAnswers(long questionnaireSubmissionId, Map<Long, String> answers) {
@@ -288,12 +286,12 @@ public class SubmissionService {
      * @param userId          the user id
      * @param questionnaireId the questionnaire id
      */
-    public void cancelQuestionnaireSubmission(long userId, long questionnaireId){
+    public void cancelQuestionnaireSubmission(long userId, long questionnaireId) {
         em.createQuery(
                 "DELETE FROM AnswerEntity a " +
                         "WHERE a.questionnaireSubmission.user.id = :userId " +
                         "AND a.questionnaireSubmission.questionnaire.id = :questionnaireId"
         ).setParameter("userId", userId).setParameter("questionnaireId", questionnaireId)
-        .executeUpdate();
+                .executeUpdate();
     }
 }

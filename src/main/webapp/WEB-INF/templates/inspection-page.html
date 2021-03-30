@@ -35,13 +35,8 @@
         </form>
     </a>
     <h4> Cancelled Questionnaires: </h4>
-    <a th:each="canc, i: ${cancellations}">
-        <form method="POST"
-              th:action="@{/inspection-page?questionnaire=__${questionnaire.getId()}__&user=__${canc.getId()}__}">
-            <button th:text="${canc.getUsername()}" type="submit">
-            </button>
-        </form>
-    </a>
+    <p th:each="canc, i: ${cancellations}">
+        <a th:text="${canc.getUsername()}"> </a>
 </td>
 
 <td th:unless="${questionnaire != null}">

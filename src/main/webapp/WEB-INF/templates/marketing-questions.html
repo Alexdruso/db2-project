@@ -10,18 +10,19 @@
 
 <span th:if="${available}">
     <h2>Answer to all of these question to get points in the leaderboard</h2>
-    <p th:if="${missing}" class="error">You have to answer to all marketing questions!</p>
-    <form action="marketing-questions" method="POST" >
+    <p class="error" style="color:blue;" th:if="${missing}"> You have to answer to all marketing questions!</p>
+    <form action="marketing-questions" method="POST">
         <div th:each="marketingQuestion: ${marketingQuestions}">
             <label th:text="${marketingQuestion.getText()}"></label>
             <br><label>
-            <textarea placeholder="Your answer" th:name="${marketingQuestion.getId()}" th:text="${marketingAnswers ? marketingAnswers.get(marketingQuestion.getId()) : null} ?: '' " >Nothing</textarea>
+            <textarea placeholder="Your answer" th:name="${marketingQuestion.getId()}"
+                      th:text="${marketingAnswers ? marketingAnswers.get(marketingQuestion.getId()) : null} ?: '' ">Nothing</textarea>
         </label>
         </div>
 
         <div class="button-container">
-            <a th:href="@{/homepage}" class="animated-button">Previous</a>
-            <button type="submit" class="animated-button">Submit</button>
+            <a class="animated-button" th:href="@{/homepage}">Previous</a>
+            <button class="animated-button" type="submit">Submit</button>
         </div>
     </form>
 </span>

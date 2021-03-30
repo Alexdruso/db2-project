@@ -46,19 +46,17 @@ public class MarketingQuestionsController extends TemplatingServlet {
 
         Map<Long, String> answers = SessionUtil.getAnswersFromSession(request);
 
-        submissionService.findCurrentQuestionnaire().ifPresentOrElse(
-                questionnaire -> {
-                    context.put(
-                            "marketingQuestions",
-                            submissionService.findMarketingQuestions(questionnaire.getId())
-                    );
-                    if (!answers.isEmpty()) {
-                        context.put("marketingAnswers", answers);
-                    }
-                    context.put("available", true);
-                },
-                () -> context.put("available", false)
-        );
+        Optional<QuestionnaireEntity> questionnaire = submissionService.findCurrentQuestionnaire();
+
+        if (questionnaire.isPresent()) {
+            context.put("marketingQuestions", submissionService.findMarketingQuestions(questionnaire.get().getId()));
+
+            if (!answers.isEmpty()) {
+                context.put("marketingAnswers", answers);
+            }
+        }
+
+        context.put("available", questionnaire.isPresent());
 
         super.processTemplate(request, response, context);
     }

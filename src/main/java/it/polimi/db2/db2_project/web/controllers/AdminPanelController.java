@@ -41,7 +41,6 @@ public class AdminPanelController extends TemplatingServlet {
         context.put("username", user.get().getUsername());
         context.put("isAdmin", user.get().getAdmin());
         context.put("questionnaire", submissionService.findCurrentQuestionnaire().orElse(null));
-        context.put("converter", new ImageUtil());
 
         super.processTemplate(request, response, context);
     }

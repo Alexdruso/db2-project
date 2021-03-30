@@ -15,7 +15,7 @@
         <p>
             <img class="img-thumbnail"
                  height="200"
-                 th:src="'data:image/jpeg;base64,' + ${converter.getImgData(questionnaire.getProductEntity().getImage())}"
+                 th:src="'data:image/jpeg;base64,' + ${questionnaire.getProductEntity().getImageBase64()}"
                  width="200"
             />
         </p>

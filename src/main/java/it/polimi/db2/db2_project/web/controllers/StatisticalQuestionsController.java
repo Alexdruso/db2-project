@@ -16,10 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @WebServlet(name = "StatisticalQuestionsController", value = "/StatisticalQuestionsController")
 public class StatisticalQuestionsController extends TemplatingServlet {
@@ -37,16 +34,16 @@ public class StatisticalQuestionsController extends TemplatingServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, Object> context = new HashMap<>();
-        submissionService.findCurrentQuestionnaire().ifPresentOrElse(
-                questionnaire -> {
-                    context.put(
-                            "statisticalQuestions",
-                            submissionService.findStatisticalQuestions(questionnaire.getId())
-                    );
-                    context.put("available", true);
-                },
-                () -> context.put("available", false)
-        );
+
+        Optional<QuestionnaireEntity> questionnaire = submissionService.findCurrentQuestionnaire();
+
+        if (questionnaire.isPresent()) {
+            List<QuestionEntity> questions = submissionService.findStatisticalQuestions(questionnaire.get().getId());
+            context.put("statisticalQuestions", questions);
+        }
+
+        context.put("available", questionnaire.isPresent());
+        
         super.processTemplate(request, response, context);
     }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Cancellation</title>
@@ -7,10 +7,10 @@
 <body>
 <h1>Are you sure you want to cancel the questionnaire?</h1>
 
-<form action="cancellation" method="POST" >
+<form action="cancellation" method="POST">
     <div class="button-container">
-        <a th:href="@{/statistical-questions}" class="animated-button">No</a>
-        <button type="submit" class="animated-button">Yes</button>
+        <button class="animated-button" type="submit" name="no"> No </button>
+        <button class="animated-button" type="submit" name="yes"> Yes </button>
     </div>
 </form>
 
