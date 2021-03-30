@@ -45,7 +45,7 @@ public class RegistrationController extends TemplatingServlet {
             return;
         }
 
-        Optional<UserEntity> result = userService.createUser(username, email, password);
+        Optional<UserEntity> result = userService.createUser(username, password, email);
 
         if (result.isEmpty()) {
             response.sendRedirect(getServletContext().getContextPath() + "/registration");
