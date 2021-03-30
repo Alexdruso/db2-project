@@ -5,14 +5,14 @@
 </head>
 <body>
 <h1>Login page</h1>
-<form th:action="@{/registration}" method="POST">
-    <label for="username">Username</label>:
-    <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
-    <label for="email">E-Mail</label>:
-    <input type="text" id="email" name="email" autofocus="autofocus" /> <br />
-    <label for="password">Password</label>:
-    <input type="password" id="password" name="password" /> <br />
-    <input type="submit" value="Register" />
+<form method="POST" th:action="@{/registration}">
+    <p><label for="username"> Username </label>:</p>
+    <p><input autofocus="autofocus" id="username" name="username" type="text"/> <br/></p>
+    <p><label for="email"> E-Mail </label>:</p>
+    <p><input autofocus="autofocus" id="email" name="email" type="text"/> <br/></p>
+    <p><label for="password"> Password </label>:</p>
+    <p><input id="password" name="password" type="password"/> <br/></p>
+    <p><input type="submit" value="Register"/></p>
 </form>
 </body>
 </html>
