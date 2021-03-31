@@ -12,12 +12,44 @@
     <h2>Answering to the following questions is not mandatory, but it will boost you position in the leaderboard!</h2>
 
     <form action="statistical-questions" method="POST" >
-        <div th:each="statisticalQuestion: ${statisticalQuestions}">
-            <label th:text="${statisticalQuestion.getText()}"></label>
-            <br><label>
-            <textarea placeholder="Your answer" th:name="${statisticalQuestion.getId()}"></textarea>
-        </label>
-        </div>
+
+        <label th:text="${statisticalQuestions.get(0).getText()}"></label>
+
+        <br>
+
+        <select th:name="${statisticalQuestions.get(0).getId()}">
+            <option value="">--Please choose an option--</option>
+            <option th:each="i : ${#numbers.sequence(16, 100)}" th:value="${i}" th:text="${i}">
+            </option>
+        </select>
+
+        <br>
+        <br>
+
+        <label th:text="${statisticalQuestions.get(1).getText()}"></label>
+
+        <br>
+
+        <select th:name="${statisticalQuestions.get(1).getId()}">
+                <option value="">--Please choose an option--</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Nonbinary">Nonbinary</option>
+        </select>
+
+        <br>
+        <br>
+
+        <label th:text="${statisticalQuestions.get(2).getText()}"></label>
+
+        <br>
+
+        <select th:name="${statisticalQuestions.get(2).getId()}">
+                <option value="">--Please choose an option--</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+        </select>
 
         <div class="button-container">
             <a th:href="@{/cancellation}" class="animated-button">Cancel</a>
@@ -29,6 +61,8 @@
 
 
 <span th:unless="${available}">We are sorry, but today no questionnaire is available.</span>
+
+
 
 </body>
 </html>
