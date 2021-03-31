@@ -99,8 +99,19 @@ public class StatisticalQuestionsController extends TemplatingServlet {
             return;
         }
 
-        QuestionnaireSubmissionEntity questionnaireSubmission = submissionService.createQuestionnaireSubmission(
-                user.get().getId(), questionnaire.get().getId());
+        //check if a questionnaire submission is already present
+        Optional<QuestionnaireSubmissionEntity> questionnaireSubmissionOptional = submissionService
+                .findQuestionnaireSubmission(
+                        user.get().getId(),
+                        questionnaire.get().getId()
+                );
+
+        QuestionnaireSubmissionEntity questionnaireSubmission = questionnaireSubmissionOptional.orElse(
+                submissionService.createQuestionnaireSubmission(
+                        user.get().getId(),
+                        questionnaire.get().getId()
+                )
+        );
 
         submissionService.submitAnswers(questionnaireSubmission.getId(), answers);
 

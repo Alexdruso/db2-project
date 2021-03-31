@@ -46,7 +46,10 @@ public class CancellationController extends TemplatingServlet {
         if(request.getParameter("yes") != null) {
             Optional<QuestionnaireEntity> questionnaire = submissionService.findCurrentQuestionnaire();
 
-            questionnaire.ifPresent(q -> submissionService.cancelQuestionnaireSubmission(user.get().getId(), q.getId()));
+            //insert an empty questionnaire submission such that the cancellation is recorded
+            questionnaire.ifPresent(
+                    q -> submissionService.createQuestionnaireSubmission(user.get().getId(), q.getId())
+            );
 
             path = getServletContext().getContextPath() + "/homepage";
         } else {
