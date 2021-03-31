@@ -13,8 +13,9 @@ import java.util.Objects;
                 @NamedQuery(
                         name = "Question.findByQuestionnaire",
                         query = "SELECT q " +
-                                "FROM QuestionEntity q JOIN QuestionnaireEntity qr " +
-                                "WHERE q.optional = :optional AND qr.id = :questionnaireId"
+                                "FROM QuestionEntity q, QuestionnaireEntity qr " +
+                                "WHERE q.optional = :optional AND qr.id = :questionnaireId " +
+                                "AND q IN (qr.questions) "
                 )
         }
 )
