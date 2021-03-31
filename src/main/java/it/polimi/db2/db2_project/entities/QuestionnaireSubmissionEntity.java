@@ -19,8 +19,8 @@ import java.util.Objects;
                         name = "QuestionnaireSubmission.findByUserAndQuestionnaire",
                         query = "SELECT qs " +
                                 "FROM QuestionnaireSubmissionEntity qs " +
-                                "JOIN UserEntity u " +
-                                "JOIN QuestionnaireEntity q " +
+                                "JOIN UserEntity u ON qs.user.id = u.id " +
+                                "JOIN QuestionnaireEntity q on qs.questionnaire.id = q.id " +
                                 "WHERE u.id = :userId " +
                                 "AND q.id = :questionnaireId"
                 ),
@@ -28,7 +28,7 @@ import java.util.Objects;
                         name = "QuestionnaireSubmission.findLeaderboardByDate",
                         query = "SELECT qs.user.username, qs.points " +
                                 "FROM QuestionnaireSubmissionEntity qs " +
-                                "JOIN QuestionnaireEntity q " +
+                                "JOIN QuestionnaireEntity q ON qs.questionnaire.id = q.id " +
                                 "WHERE q.date = :date " +
                                 "ORDER BY qs.points"
                 )
