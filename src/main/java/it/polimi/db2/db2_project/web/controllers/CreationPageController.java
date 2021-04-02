@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
@@ -47,13 +48,18 @@ public class CreationPageController extends TemplatingServlet {
 
         context.put("isAdmin", user.get().getAdmin());
         context.put("products", productService.findAllProducts());
-        context.put("date", dateFormat.format(new Date()));
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        Date tomorrow = calendar.getTime();
+
+        context.put("date", dateFormat.format(tomorrow));
 
         super.processTemplate(request, response, context);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Optional<UserEntity> user = SessionUtil.checkLogin(request);
 
         if (user.isEmpty()) {
@@ -67,20 +73,18 @@ public class CreationPageController extends TemplatingServlet {
             return;
         }
 
-        //TODO improve this code
         long productId = Long.parseLong(request.getParameter("product"));
         Date questionnaireDate;
 
         try {
             questionnaireDate = dateFormat.parse(request.getParameter("date"));
-
-            if (questionnaireDate.before(new Date())) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Questionnaires can only be created for a future date");
-                return;
-            }
-
         } catch (ParseException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid date format");
+            return;
+        }
+
+        if (questionnaireDate.before(new Date())) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Questionnaires can only be created for a future date");
             return;
         }
 
