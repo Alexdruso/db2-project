@@ -1,6 +1,8 @@
 package it.polimi.db2.db2_project.services;
 
 import it.polimi.db2.db2_project.entities.*;
+import org.eclipse.persistence.config.HintValues;
+import org.eclipse.persistence.config.QueryHints;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -103,6 +105,7 @@ public class SubmissionService {
         )
                 .setParameter("userId", userId)
                 .setParameter("questionnaireId", questionnaireId)
+                .setHint(QueryHints.REFRESH, HintValues.TRUE)
                 .getResultStream().findFirst();
     }
 
