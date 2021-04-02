@@ -5,20 +5,20 @@
     <title>Home page</title>
 </head>
 <body>
-<h1> Ciao, <span th:text="${username}"> Username </span></h1>
-<h2> Prodotto del giorno</h2>
+<h1> Welcome, <span th:text="${username}"> Username </span></h1>
+<h2>
+    <td th:text="${product ? 'Product of the day: ' + product.getName() : null} ?: 'No product of the day :/'"></td>
+</h2>
 
 <p>
     <img class='img-thumbnail' th:if="${product != null}"
          th:src="'data:image/jpeg;base64,' + ${product.getImageBase64()}"/>
 </p>
 
-<p>
-<td th:text="${product ? product.getName() : null} ?: 'No product of the day :/'"></td>
-</p>
 
-
-<p><a href="marketing-questions"> Questionnaire </a></p>
+<p th:if="${hasSubmitted}"> You have already submitted this questionnaire </p>
+<p th:unless="${hasSubmitted}"><a href="marketing-questions"> Go to Questionnaire </a></p>
+<p><a href="leaderboard"> View the leaderboard </a></p>
 
 <td th:switch="${#lists.size(reviews)}">
     <span th:case="'0'"> No one answered yet! Be the first to answer! </span>
@@ -36,7 +36,8 @@
                 <td style="text-align:center">
                     <span th:text="${review.getQuestionnaireSubmission().getUser().getUsername()}"> Username </span>
                 </td>
-                <td style="text-align:center"><span th:text="${review.getQuestion().getText()} + ' - ' + ${review.getText()}"> Review </span></td>
+                <td style="text-align:center"><span
+                        th:text="${review.getQuestion().getText()} + ' - ' + ${review.getText()}"> Review </span></td>
             </tr>
             </tbody>
         </table>
