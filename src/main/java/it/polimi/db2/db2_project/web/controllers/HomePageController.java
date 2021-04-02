@@ -1,8 +1,11 @@
 package it.polimi.db2.db2_project.web.controllers;
 
 import it.polimi.db2.db2_project.entities.ProductEntity;
+import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
+import it.polimi.db2.db2_project.entities.QuestionnaireSubmissionEntity;
 import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.ProductService;
+import it.polimi.db2.db2_project.services.SubmissionService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
 import it.polimi.db2.db2_project.web.utils.SessionUtil;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -23,6 +26,9 @@ public class HomePageController extends TemplatingServlet {
     @EJB
     private ProductService productService;
 
+    @EJB
+    private SubmissionService submissionService;
+
     public HomePageController() {
         super("welcome", TemplateMode.HTML, "WEB-INF/templates/", ".html");
     }
@@ -42,13 +48,33 @@ public class HomePageController extends TemplatingServlet {
             return;
         }
 
-        final Map<String, Object> context = new HashMap<>();
+        Map<String, Object> context = new HashMap<>();
         context.put("username", user.get().getUsername());
 
         Optional<ProductEntity> product = productService.findCurrentProduct();
 
         context.put("product", product.orElse(null));
-        product.ifPresent(p -> context.put("reviews", productService.findProductReviews(p)));
+
+        boolean hasSubmitted = false;
+
+        if (product.isPresent()) {
+            context.put("reviews", productService.findProductReviews(product.get()));
+
+            Optional<QuestionnaireEntity> questionnaire = submissionService.findCurrentQuestionnaire();
+
+            if (questionnaire.isPresent()) {
+
+                Optional<QuestionnaireSubmissionEntity> submission = submissionService.findQuestionnaireSubmission(
+                        user.get().getId(), questionnaire.get().getId());
+
+                if (submission.isPresent()) {
+                    hasSubmitted = submission.get().isSubmitted();
+                }
+            }
+        }
+
+        context.put("hasSubmitted", hasSubmitted);
+
         super.processTemplate(request, response, context);
     }
 }
