@@ -40,7 +40,7 @@ public class UserEntity implements Serializable {
     //relationships definition part
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionnaireEntity> questionnaires = new ArrayList<>();
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionnaireSubmissionEntity> questionnaireSubmissions = new ArrayList<>();
 
     public UserEntity() {
@@ -156,7 +156,6 @@ public class UserEntity implements Serializable {
         if (!Objects.equals(username, that.username)) return false;
         if (!Objects.equals(password, that.password)) return false;
         if (!Objects.equals(email, that.email)) return false;
-        if (!Objects.equals(lastLogin, that.lastLogin)) return false;
         return Objects.equals(admin, that.admin);
     }
 
