@@ -54,7 +54,7 @@ public class QuestionnaireSubmissionEntity implements Serializable {
     @JoinColumn(name = "QUESTIONNAIRE_ID", nullable = false)
     private QuestionnaireEntity questionnaire;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "questionnaireSubmission", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "questionnaireSubmission", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnswerEntity> answers = new ArrayList<>();
 
     public QuestionnaireSubmissionEntity() {

@@ -38,14 +38,14 @@ public class ProductEntity implements Serializable {
 
     //relationships definition part
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionnaireEntity> questionnaire;
 
-    public List<QuestionnaireEntity> getQuestionnaire() {
+    public List<QuestionnaireEntity> getQuestionnaires() {
         return questionnaire;
     }
 
-    public void setQuestionnaire(List<QuestionnaireEntity> questionnaire) {
+    public void setQuestionnaires(List<QuestionnaireEntity> questionnaire) {
         this.questionnaire = questionnaire;
     }
 
