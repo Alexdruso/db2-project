@@ -88,6 +88,14 @@ public class CreationPageController extends TemplatingServlet {
             return;
         }
 
+        boolean dateTaken = adminService.getAllQuestionnaires().stream()
+                .anyMatch(q -> q.getDate().equals(questionnaireDate));
+
+        if (dateTaken) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "There is already a questionnaire scheduled for the selected date");
+            return;
+        }
+
         QuestionnaireEntity newQuestionnaire = adminService.createQuestionnaire(
                 user.get().getId(),
                 productId,
