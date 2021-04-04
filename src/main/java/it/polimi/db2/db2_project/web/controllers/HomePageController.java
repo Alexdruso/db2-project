@@ -50,6 +50,7 @@ public class HomePageController extends TemplatingServlet {
 
         Map<String, Object> context = new HashMap<>();
         context.put("username", user.get().getUsername());
+        context.put("ban", user.get().getBan());
 
         Optional<ProductEntity> product = productService.findCurrentProduct();
 

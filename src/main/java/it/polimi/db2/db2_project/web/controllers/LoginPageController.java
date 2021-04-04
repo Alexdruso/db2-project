@@ -32,6 +32,8 @@ public class LoginPageController extends TemplatingServlet {
             context.put("login_error", true);
         }
 
+        request.getSession().setAttribute("user", null);
+
         super.processTemplate(request, response, context);
     }
 

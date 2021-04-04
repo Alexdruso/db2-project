@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @WebServlet(name = "RegistrationController", value = "/RegistrationController")
@@ -26,7 +27,10 @@ public class RegistrationController extends TemplatingServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        super.processTemplate(request, response);
+        Map<String, Object> ctx = new HashMap<>();
+        ctx.put("missing", request.getParameter("missing"));
+        ctx.put("duplicated", request.getParameter("duplicated"));
+        super.processTemplate(request, response, ctx);
     }
 
     @Override
@@ -39,7 +43,12 @@ public class RegistrationController extends TemplatingServlet {
                 username.isEmpty() || password.isEmpty() || email.isEmpty();
 
         if (invalid) {
-            response.sendRedirect(getServletContext().getContextPath() + "/registration");
+            response.sendRedirect(getServletContext().getContextPath() + "/registration?missing=true");
+            return;
+        }
+
+        if (userService.findUserByUsername(username).isPresent() || userService.findUserByEmail(email).isPresent()) {
+            response.sendRedirect(getServletContext().getContextPath() + "/registration?duplicated=true");
             return;
         }
 

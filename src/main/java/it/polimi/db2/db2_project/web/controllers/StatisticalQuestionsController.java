@@ -91,7 +91,7 @@ public class StatisticalQuestionsController extends TemplatingServlet {
 
         if (submissionService.checkOffensiveWords(new ArrayList<>(answers.values()))) {
             userService.banUser(user.get().getId());
-
+            request.getSession().setAttribute("user", null);
             response.sendError(
                     HttpServletResponse.SC_BAD_REQUEST,
                     "Your answer contained some bad words, you are therefore banned"
