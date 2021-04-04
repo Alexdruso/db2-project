@@ -29,8 +29,8 @@ import java.util.Objects;
                         query = "SELECT qs.user.username, qs.points " +
                                 "FROM QuestionnaireSubmissionEntity qs " +
                                 "JOIN QuestionnaireEntity q ON qs.questionnaire.id = q.id " +
-                                "WHERE q.date = :date " +
-                                "ORDER BY qs.points"
+                                "WHERE q.date = :date AND qs.points <> 0 " +
+                                "ORDER BY qs.points DESC"
                 )
         }
 )
