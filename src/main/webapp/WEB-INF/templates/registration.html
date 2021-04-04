@@ -4,7 +4,11 @@
     <title>Login page</title>
 </head>
 <body>
-<h1>Login page</h1>
+<h1>Registration page</h1>
+
+<p class="error" style="color:red;" th:if="${missing}"> Fields Missing</p>
+<p class="error" style="color:red;" th:if="${duplicated}"> Username/Email already used</p>
+
 <form method="POST" th:action="@{/registration}">
     <p><label for="username"> Username </label>:</p>
     <p><input autofocus="autofocus" id="username" name="username" type="text"/> <br/></p>

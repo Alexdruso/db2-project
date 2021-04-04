@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1> Welcome, <span th:text="${username}"> Username </span></h1>
+(<a href="login">logout</a>) (<a href="leaderboard">leaderboard</a>)
 <h2>
     <td th:text="${product ? 'Product of the day: ' + product.getName() : null} ?: 'No product of the day :/'"></td>
 </h2>
@@ -17,8 +18,8 @@
 
 
 <p th:if="${hasSubmitted}"> You have already submitted this questionnaire </p>
-<p th:unless="${hasSubmitted}"><a href="marketing-questions"> Go to Questionnaire </a></p>
-<p><a href="leaderboard"> View the leaderboard </a></p>
+<p th:if="${ban}"> You are banned, so no questionnaire for you :/ </p>
+<p th:unless="${hasSubmitted || !product}"><a href="marketing-questions"> Go to Questionnaire </a></p>
 
 <td th:switch="${#lists.size(reviews)}">
     <span th:case="'0'"> No one answered yet! Be the first to answer! </span>

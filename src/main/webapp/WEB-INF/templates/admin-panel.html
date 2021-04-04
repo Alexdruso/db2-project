@@ -7,7 +7,7 @@
 <body>
 <td th:if="${isAdmin}">
     <h1> Welcome, <span th:text="${username}"> Username </span></h1>
-
+    (<a href="login">logout</a>)
 
     <a th:if="${questionnaire != null}">
         <h2> Product of the day: </h2>
