@@ -16,6 +16,12 @@ import java.util.Objects;
                         query = "SELECT u " +
                                 "FROM UserEntity u " +
                                 "WHERE u.username = :username"
+                ),
+                @NamedQuery(
+                        name = "User.findByEmail",
+                        query = "SELECT u " +
+                                "FROM UserEntity u " +
+                                "WHERE u.email = :email"
                 )
         }
 )
