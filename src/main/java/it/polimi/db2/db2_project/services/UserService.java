@@ -35,10 +35,20 @@ public class UserService {
         }
     }
 
-    public Optional<UserEntity> checkCredentials(String username, String password) {
-        Optional<UserEntity> user = em.createNamedQuery("User.findByUsername", UserEntity.class)
+    public Optional<UserEntity> findUserByUsername(String username) {
+        return em.createNamedQuery("User.findByUsername", UserEntity.class)
                 .setParameter("username", username)
                 .getResultStream().findFirst();
+    }
+
+    public Optional<UserEntity> findUserByEmail(String email) {
+        return em.createNamedQuery("User.findByEmail", UserEntity.class)
+                .setParameter("email", email)
+                .getResultStream().findFirst();
+    }
+
+    public Optional<UserEntity> checkCredentials(String username, String password) {
+        Optional<UserEntity> user = findUserByUsername(username);
 
         if (user.isEmpty()) {
             return Optional.empty();
@@ -57,13 +67,15 @@ public class UserService {
     }
 
     public void banUser(long userId) {
-        Optional<UserEntity> user = findUser(userId);
+        Optional<UserEntity> userOpt = findUser(userId);
 
-        if (user.isEmpty()) {
+        if (userOpt.isEmpty()) {
             throw new IllegalArgumentException(String.format("User with ID = %d does not exist!", userId));
         }
 
-        user.get().setBan(true);
+        UserEntity user = userOpt.get();
+
+        user.setBan(true);
         em.persist(user);
         em.flush();
     }
