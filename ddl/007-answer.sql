@@ -1,3 +1,5 @@
+-- Cyclic dependencies found
+
 create table answer
 (
 	id int auto_increment,

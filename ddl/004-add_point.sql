@@ -1,3 +1,5 @@
+-- Cyclic dependencies found
+
 create definer = admin@`%` trigger add_point
 	after insert
 	on answer

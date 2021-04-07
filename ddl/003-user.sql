@@ -10,7 +10,9 @@ create table user
 	constraint user_email_uindex
 		unique (email),
 	constraint user_id_uindex
-		unique (id)
+		unique (id),
+	constraint user_username_uindex
+		unique (username)
 );
 
 alter table user

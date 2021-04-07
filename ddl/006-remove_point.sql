@@ -1,3 +1,5 @@
+-- Cyclic dependencies found
+
 create definer = admin@`%` trigger remove_point
 	after delete
 	on answer

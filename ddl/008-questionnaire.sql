@@ -1,3 +1,5 @@
+-- Cyclic dependencies found
+
 create table questionnaire
 (
 	id int auto_increment,
