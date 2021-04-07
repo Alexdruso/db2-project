@@ -1,3 +1,5 @@
+-- Cyclic dependencies found
+
 create definer = admin@`%` trigger check_offensive_words
 	after insert
 	on answer
