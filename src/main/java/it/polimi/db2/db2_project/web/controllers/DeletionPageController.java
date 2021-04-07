@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
@@ -81,8 +84,11 @@ public class DeletionPageController extends TemplatingServlet {
     }
 
     private Predicate<QuestionnaireEntity> isBeforePresentDay() {
-        Instant today = new Date().toInstant().truncatedTo(ChronoUnit.DAYS);
+        LocalDate today = LocalDate.now();
 
-        return q -> q.getDate().toInstant().isBefore(today);
+        return q -> q.getDate().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+                .isBefore(today);
     }
 }
