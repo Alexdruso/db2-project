@@ -1,6 +1,7 @@
 package it.polimi.db2.db2_project.web.controllers;
 
 import it.polimi.db2.db2_project.entities.QuestionnaireEntity;
+import it.polimi.db2.db2_project.entities.QuestionnaireSubmissionEntity;
 import it.polimi.db2.db2_project.entities.UserEntity;
 import it.polimi.db2.db2_project.services.SubmissionService;
 import it.polimi.db2.db2_project.web.TemplatingServlet;
@@ -47,9 +48,16 @@ public class CancellationController extends TemplatingServlet {
             Optional<QuestionnaireEntity> questionnaire = submissionService.findCurrentQuestionnaire();
 
             //insert an empty questionnaire submission such that the cancellation is recorded
-            questionnaire.ifPresent(
-                    q -> submissionService.createQuestionnaireSubmission(user.get().getId(), q.getId())
-            );
+            if (questionnaire.isPresent()) {
+                Optional<QuestionnaireSubmissionEntity> submission = submissionService.findQuestionnaireSubmission(
+                        user.get().getId(),
+                        questionnaire.get().getId()
+                );
+
+                if (submission.isEmpty()) {
+                    submissionService.createQuestionnaireSubmission(user.get().getId(), questionnaire.get().getId());
+                }
+            }
 
             path = getServletContext().getContextPath() + "/homepage";
         } else {
