@@ -10,6 +10,7 @@ import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Stateless
 public class ProductService {
@@ -32,7 +33,10 @@ public class ProductService {
     public List<AnswerEntity> findProductReviews(ProductEntity product) {
         return em.createNamedQuery("Product.findReviewsByProduct", AnswerEntity.class)
                 .setParameter("productId", product.getId())
-                .getResultList();
+                .getResultList()
+                .stream()
+                .filter(a -> !a.getQuestion().getOptional())
+                .collect(Collectors.toList());
     }
 
     public List<ProductEntity> findAllProducts() {
