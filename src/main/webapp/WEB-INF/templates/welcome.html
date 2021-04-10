@@ -13,6 +13,7 @@
 
 <p>
     <img class='img-thumbnail' th:if="${product != null}"
+         width="200" height="200"
          th:src="'data:image/jpeg;base64,' + ${product.getImageBase64()}"/>
 </p>
 
