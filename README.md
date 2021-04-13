@@ -1,1 +1,3 @@
-# db2-project
+# DataBases 2 Project 2020/2021
+
+Prof: Piero Fraternali
